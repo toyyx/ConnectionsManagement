@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/navMain"
+            android:icon="@mipmap/ic_result_menu"
+            android:title="个人主页"/>
+        <item
+            android:id="@+id/navConnections"
+            android:icon="@mipmap/ic_result_menu"
+            android:title="人脉关系网"/>
+        <item
+            android:id="@+id/navAbout"
+            android:icon="@mipmap/ic_result_menu"
+            android:title="关于本软件"/>
+        <item
+            android:id="@+id/nav"
+            android:icon="@mipmap/ic_result_menu"
+            android:title="待定选项"/>
+    </group>
+</menu>
