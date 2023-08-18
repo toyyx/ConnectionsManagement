@@ -1,6 +1,5 @@
 package com.example.connectionsmanagement
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -8,13 +7,20 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.GestureDetector
+import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -41,13 +47,11 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-
 class ResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.result_activity_layout)
-
         Toast.makeText(this,"create",Toast.LENGTH_SHORT).show()
 
             //设置toolbar
@@ -55,7 +59,7 @@ class ResultActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
             supportActionBar?.let {
                 it.setDisplayHomeAsUpEnabled(true)
-                it.setHomeAsUpIndicator(R.mipmap.ic_result_menu)
+//                it.setHomeAsUpIndicator(R.mipmap.ic_result_menu) //设置home键图标 即：toolbar最左侧按钮
             }
 
             //设置左滑菜单
@@ -87,6 +91,7 @@ class ResultActivity : AppCompatActivity() {
             }
     }
 
+
     override fun onStart() {
         super.onStart()
         Toast.makeText(this,"onStart",Toast.LENGTH_SHORT).show()
@@ -95,22 +100,7 @@ class ResultActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Toast.makeText(this,"resume",Toast.LENGTH_SHORT).show()
-
-        refresh()
-
-        //设置按钮增加人物
-        val addBt: FloatingActionButton = supportFragmentManager.findFragmentById(R.id.drawerFragment)!!.requireView().findViewById(R.id.addButton)
-        addBt.setOnClickListener{
-            val intent=Intent(this,PopAddHumanActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        }
-
-        //设置按钮... 功能暂未设计
-        val delBt: FloatingActionButton = supportFragmentManager.findFragmentById(R.id.drawerFragment)!!.requireView().findViewById(R.id.deleteButton)
-        delBt.setOnClickListener {
-
-        }
+        refresh() //刷新关系图
     }
 
     override fun onPause() {
@@ -133,15 +123,6 @@ class ResultActivity : AppCompatActivity() {
         Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show()
     }
 
-    //顶部菜单
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val draLayout=findViewById<DrawerLayout>(R.id.resultShow)
-        when(item.itemId){
-            android.R.id.home -> draLayout.openDrawer(GravityCompat.START)
-        }
-        return true
-    }
-
     //刷新人脉图谱
     @SuppressLint("Range")
     fun refresh(){
@@ -150,7 +131,7 @@ class ResultActivity : AppCompatActivity() {
         val db=dbHelper.writableDatabase
         val cursor=db.query("Human",null,null,null,null,null,null)
         if(cursor.moveToFirst()){
-            val relativeHumanLayout=findViewById<RelativeLayout>(R.id.ConnectionsMap)
+            val relativeHumanLayout=findViewById<RelativeLayout>(R.id.ConnectionsHumanMap)
             val relativeLineLayout=findViewById<RelativeLayout>(R.id.ConnectionsLineMap)
             val connectionsList: ArrayList<MySuperTextView> = arrayListOf()
             do{
@@ -167,7 +148,10 @@ class ResultActivity : AppCompatActivity() {
 
                 //创建人物视图
                 val mySuperTextView=MySuperTextView(imageBitmap,name)
+
+                //将视图存入关系队列
                 connectionsList.add(mySuperTextView)
+
             }while(cursor.moveToNext())
             //在关系图上进行绘制
             createGraph(connectionsList,relativeHumanLayout,relativeLineLayout)
@@ -175,11 +159,9 @@ class ResultActivity : AppCompatActivity() {
         cursor.close()
     }
 
-    //人脉关系图绘制 备注：目前仅实现关系第一圈，较多人物后将出现重叠
+    //人脉关系图绘制 备注：目前已实现人物围绕中心绕圈分布，重叠时圆圈自动外扩，展现一圈圈的人脉关系图
     private fun createGraph(mySuperTextViewList: ArrayList<MySuperTextView>,relativeHumanLayout:RelativeLayout,relativeLineLayout:RelativeLayout){
-        val connectionsSize=mySuperTextViewList.size-1 //人际关系数量
-        val radius = 300 //半径
-        val angleIncrement = 2 * Math.PI / connectionsSize //增长角度
+        val baseRadius = 300 //基础半径
         val centerView = mySuperTextViewList[0] //中心人物 即：用户自身
 
         //每次刷新时清空关系图
@@ -191,35 +173,20 @@ class ResultActivity : AppCompatActivity() {
         centerViewParams.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE)
         relativeHumanLayout.addView(centerView,centerViewParams)
 
-        //计算坐标并添加其余人物视图
+        //待中心视图布置完成后，添加其余人物视图
         centerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                // 在这里，视图已经被布局，此时才可以获取中心人物视图的位置
+                //获取中心人物视图的位置
                 val centerX = centerView.x
                 val centerY = centerView.y
 
-                // 计算其他视图位置
-                for (i in 0 until connectionsSize) {
-                    val angle = i * angleIncrement //角度
-                    val x = (centerX + radius * cos(angle)).toInt() //x坐标
-                    val y = (centerY + radius * sin(angle)).toInt() //y坐标
+                //视图重叠最大间距
+                val viewSpacing =sqrt(centerView.width.toDouble().pow(2.0) + centerView.height.toDouble().pow(2.0))
+                val finishedViewGroup: ArrayList<MySuperTextView> = arrayListOf() //本圈视图队列
 
-                    //获取人物视图
-                    val view = mySuperTextViewList[i+1]
-                    val viewParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-                    viewParams.leftMargin = x
-                    viewParams.topMargin = y
-                    relativeHumanLayout.addView(view, viewParams)
+                //绘制其余人物视图
+                refreshAll(mySuperTextViewList,finishedViewGroup,centerX,centerY,baseRadius,relativeHumanLayout,relativeLineLayout,viewSpacing,1)
 
-                    //添加人物视图之间的连线
-                    view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
-                            drawLineBetweenViews(relativeLineLayout,centerView,view)
-                            view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        }
-                    })
-
-                }
                 // 完成了需要在此回调中做的操作，注销监听器，以避免多次调用
                 centerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
@@ -246,10 +213,152 @@ class ResultActivity : AppCompatActivity() {
 
         // 设置线条的位置和旋转角度
         line.x = (startX + endX)/2- width/2
-        line.y = (startY + endY)/2- 5/ 2
+        line.y = (startY + endY)/2- height/ 2
         line.rotation = angle.toFloat()
 
         // 将线条添加到布局中
         layout.addView(line)
     }
+
+    //判断两视图是否重叠
+    fun viewsOverlap(view1: View, view2: View,viewSpacing:Double): Boolean {
+        val viewDistance=sqrt((view1.x-view2.x).toDouble().pow(2.0) + (view1.y-view2.y).toDouble().pow(2.0))
+        return viewDistance<viewSpacing
+    }
+    fun viewsOverlap(viewX: Int,viewY: Int,compareView: View,viewSpacing:Double): Boolean {
+        val viewDistance=sqrt((viewX-compareView.x).toDouble().pow(2.0) + (viewY-compareView.y).toDouble().pow(2.0))
+        return viewDistance<viewSpacing
+    }
+
+    //判断视图与视图组是否重叠
+    fun viewsGroupOverlap(newView: View,currentViewGroup:ArrayList<MySuperTextView>,viewSpacing:Double):Boolean{
+        var result = false
+        for(tempView in currentViewGroup){
+            if(viewsOverlap(newView,tempView,viewSpacing)){
+                result=true
+            }
+        }
+        return result
+    }
+    fun viewsGroupOverlap(newViewX: Int,newViewY: Int,currentViewGroup:ArrayList<MySuperTextView>,viewSpacing:Double):Boolean{
+        var result = false
+        for(tempView in currentViewGroup){
+            if(viewsOverlap(newViewX,newViewY,tempView,viewSpacing)){
+                result=true
+            }
+        }
+        return result
+    }
+
+    //将视图放入布局
+    fun arrangeView(newView: View,X:Int,Y:Int,relativeLayout:RelativeLayout){
+        val viewParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+        viewParams.leftMargin = X
+        viewParams.topMargin = Y
+        relativeLayout.addView(newView, viewParams)
+    }
+
+    //刷新除中心外的所有视图 备注：需要在中心视图布置完成后使用
+    fun refreshAll(mySuperTextViewList:ArrayList<MySuperTextView>,finishedViewGroup:ArrayList<MySuperTextView>,centerX:Float,centerY:Float,currentRadius:Int,humanLayout:RelativeLayout,lineLayout:RelativeLayout,viewSpacing:Double,location:Int){
+        //判断当前布置视图进度
+        if(location+1>mySuperTextViewList.size){
+            //当完成所有视图的布置后，进行视图与中心的连线
+            for(view in mySuperTextViewList){
+                drawLineBetweenViews(lineLayout,humanLayout.getChildAt(0),view)
+            }
+        }else{
+            //视图布置进行中，开始新视图布置
+            val newView=mySuperTextViewList[location] //新视图
+            finishedViewGroup.add(newView)  //加入本圈视图队列
+            val currentViewSize=finishedViewGroup.size //本圈视图数量
+            var currentAngle= 0.0 //当前角度
+            var angleIncrement=2 * Math.PI/currentViewSize //本圈角度增加量
+            var curRadius=currentRadius //当前半径
+            val radiusIncrement=100 //扩圈时的半径增加量
+
+            //调整本圈其余视图位置
+            for (i in humanLayout.childCount-currentViewSize+1 until humanLayout.childCount) {
+                humanLayout.getChildAt(i).x = (centerX + curRadius * cos(currentAngle)).toFloat()
+                humanLayout.getChildAt(i).y = (centerY - curRadius * sin(currentAngle)).toFloat()
+                currentAngle += angleIncrement
+            }
+
+            //布置本圈新视图
+            var x = (centerX + curRadius * cos(currentAngle)).toInt() //x坐标
+            var y = (centerY - curRadius * sin(currentAngle)).toInt() //y坐标
+            arrangeView(newView, x, y, humanLayout)
+
+            //设置本圈恢复标志
+            var restoreFlag=false
+
+            //布置新视图后判断是否重叠
+            while(viewsGroupOverlap(x, y,ArrayList(mySuperTextViewList.take(location)),viewSpacing)){
+                //重叠后恢复本圈其余视图至正确位置
+                if(!restoreFlag){
+                    currentAngle=0.0
+                    angleIncrement=2 * Math.PI/(currentViewSize-1)
+                    for (i in humanLayout.childCount-currentViewSize until humanLayout.childCount) {
+                        humanLayout.getChildAt(i).x = (centerX + curRadius * cos(currentAngle)).toFloat()
+                        humanLayout.getChildAt(i).y = (centerY - curRadius * sin(currentAngle)).toFloat()
+                        currentAngle += angleIncrement
+                    }
+                    restoreFlag=true //本圈已恢复
+                }
+
+                //移除新视图，清空本圈视图队列
+                finishedViewGroup.clear()
+                humanLayout.removeView(newView)
+
+                //开启新圈
+                finishedViewGroup.add(newView) //新视图为新圈第一个视图
+                curRadius += radiusIncrement //新圈半径
+                x = (centerX + curRadius * cos(0.0)).toInt() //x坐标
+                y = (centerY - curRadius * sin(0.0)).toInt() //y坐标
+                arrangeView(newView,x,y,humanLayout) //布置新视图
+            }
+
+            //待当前视图布局完成后，进行下一个视图的布局
+            newView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    newView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    refreshAll(mySuperTextViewList,finishedViewGroup,centerX,centerY,curRadius,humanLayout,lineLayout,viewSpacing,location+1)
+                }
+            })
+        }
+    }
+
+//    //视角回归中心 备注：目前未使用
+//    fun toCenter(){
+//        val connectionsMapLayout= findViewById<RelativeLayout>(R.id.ConnectionsMap)
+//        val displayMetrics = resources.displayMetrics
+//        val screenWidth = displayMetrics.widthPixels
+//        val screenHeight = displayMetrics.heightPixels
+//        connectionsMapLayout.translationX = - dpToPx(1500)+screenWidth/2
+//        connectionsMapLayout.translationY = - dpToPx(1500)+screenHeight/2
+//    }
+
+    //关系图界面的顶部菜单
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.result_toolbar, menu)
+        return true
+    }
+
+    //顶部菜单的功能
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            //打开侧边菜单
+            android.R.id.home -> {val draLayout=findViewById<DrawerLayout>(R.id.resultShow)
+                                        draLayout.openDrawer(GravityCompat.START)}
+            //添加人物
+            R.id.addHuman -> {val intent=Intent(this,PopAddHumanActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)}
+            //待定...
+            R.id.delHuman -> Toast.makeText(this, "You clicked delHuman",
+                Toast.LENGTH_SHORT).show()
+        }
+        return true
+    }
+
 }
+

@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:text="（7字以内）"
+            android:hint="7字以内"
             android:maxLength="7"
             android:singleLine="true"/>
     </LinearLayout>
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:text="（100字以内）"
+            android:hint="100字以内"
             android:maxLength="100"
             android:maxLines="3"/>
     </LinearLayout>
