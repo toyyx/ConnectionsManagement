@@ -1,4 +1,4 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 
 import android.graphics.Bitmap
 import android.view.Gravity.CENTER_HORIZONTAL

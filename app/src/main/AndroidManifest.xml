@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-
     <application
-        android:name=".ConnectionsManagementApplication"
+        android:name=".ConnectionsMap.ConnectionsManagementApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,21 +14,24 @@
         android:theme="@style/Theme.ConnectionsManagement"
         tools:targetApi="31">
         <activity
-            android:name=".PopAddHumanActivity"
-            android:theme="@style/TransparentTheme"
+            android:name=".RegisterAndLogin.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:name=".RegisterAndLogin.LoginActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RegisterAndLogin.MainActivity" />
         <activity
-            android:name=".ResultActivity"
+            android:name=".ConnectionsMap.PopAddHumanActivity"
+            android:exported="false"
+            android:theme="@style/TransparentTheme" />
+        <activity
+            android:name=".ConnectionsMap.ResultActivity"
             android:exported="false"
             android:label="人际关系展示"
             android:launchMode="singleTask" />

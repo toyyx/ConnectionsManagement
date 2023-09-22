@@ -7,6 +7,17 @@ android {
     namespace 'com.example.connectionsmanagement'
     compileSdk 33
 
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layout/RegistAndLogin',
+                    'src/main/res/layout/ConnectionsMap',
+                    'src/main/res/layout',
+                    'src/main/res'
+            ]
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.connectionsmanagement"
         minSdk 28

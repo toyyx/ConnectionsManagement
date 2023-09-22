@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.example.connectionsmanagement.MyDrawerLayout
+<com.example.connectionsmanagement.ConnectionsMap.MyDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/resultShow"
@@ -21,7 +21,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/drawerFragment"
-            android:name="com.example.connectionsmanagement.DrawerFragment"
+            android:name="com.example.connectionsmanagement.ConnectionsMap.DrawerFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -36,4 +36,4 @@
         app:menu="@menu/nav_menu"
         app:headerLayout="@layout/nav_header"/>
 
-</com.example.connectionsmanagement.MyDrawerLayout>
+</com.example.connectionsmanagement.ConnectionsMap.MyDrawerLayout>

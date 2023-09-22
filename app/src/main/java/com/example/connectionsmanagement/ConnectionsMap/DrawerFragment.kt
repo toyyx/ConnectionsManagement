@@ -1,10 +1,11 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 //为配合drawer设置的Fragment，具体实现在ResultActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.connectionsmanagement.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

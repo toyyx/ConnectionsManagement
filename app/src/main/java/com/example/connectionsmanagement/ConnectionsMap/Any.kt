@@ -1,16 +1,9 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 //通用方法暂存处
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import java.io.File
-import java.io.FileOutputStream
-import java.time.LocalDateTime
 
 
 fun Any.pxToDp(px: Int): Int {

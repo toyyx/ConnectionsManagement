@@ -1,17 +1,11 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 
 
-import android.R.attr.x
-import android.R.attr.y
-import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -22,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.core.content.contentValuesOf
+import com.example.connectionsmanagement.R
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -104,7 +99,7 @@ class PopAddHumanActivity : AppCompatActivity() {
             val imageByteArray = stream.toByteArray()
 
             //存储数据
-            val dbHelper=ConnectionsDatabaseHelper(this,"ConnectionsStore.db",1)
+            val dbHelper= ConnectionsDatabaseHelper(this,"ConnectionsStore.db",1)
             val db=dbHelper.writableDatabase
             db.insert("Human",null, contentValuesOf(
                 "name" to "${findViewById<EditText>(R.id.addNameText).text.toString()}",
@@ -122,7 +117,9 @@ class PopAddHumanActivity : AppCompatActivity() {
 
     //保存bitmap图片至本地
     fun saveBitmap(bitmap: Bitmap?){
-        val humanImageFile= File(externalCacheDir,"${findViewById<EditText>(R.id.addNameText).text.toString()}${findViewById<EditText>(R.id.addNotesText).text.toString()}.jpg")
+        val humanImageFile= File(externalCacheDir,"${findViewById<EditText>(R.id.addNameText).text.toString()}${findViewById<EditText>(
+            R.id.addNotesText
+        ).text.toString()}.jpg")
         if(!humanImageFile.exists()){
             humanImageFile.createNewFile()
         }

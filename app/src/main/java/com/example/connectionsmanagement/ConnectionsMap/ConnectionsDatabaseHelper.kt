@@ -1,4 +1,4 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 //人物信息数据库
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

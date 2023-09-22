@@ -1,4 +1,4 @@
-package com.example.connectionsmanagement
+package com.example.connectionsmanagement.ConnectionsMap
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentContainerView
+import com.example.connectionsmanagement.R
 import java.lang.Float.max
 import java.lang.Float.min
 
@@ -86,32 +87,32 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
 
     //利用相对于窗口的绝对位置，修正视图位置
     //备注：在实现检查边界功能的过程中想到一种方法，但最终未使用，考虑到后续开发可能需要，暂时留存此方法
-    fun checkPosition(view: View){
-        //状态栏高度
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val statusBarHeight = if (resourceId > 0) {
-            resources.getDimensionPixelSize(resourceId)
-        } else { 0 }
-        //获取视图的绝对坐标 （相对于窗口左上角）
-        val location=IntArray(2)
-        view.getLocationInWindow(location)
-        val containerLayout = findViewById<FragmentContainerView>(R.id.drawerFragment)
-        val toolbarLayout=findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        val maxOffsetX = -(view.width/2-view.width*scale/2)
-        val minOffsetX = -(view.width/2-width + view.width * scale/2)
-        val maxOffsetY = -(view.height/2-view.height*scale/2)
-        val minOffsetY = -(view.height/2-containerLayout.height + view.height * scale/2)
-        if(location[0]>maxOffsetX){
-            view.translationX=-(view.width-view.width*scale)/2
-        }else if(location[0]<minOffsetX){
-            view.translationX=-(view.width/2+view.width*scale/2-width)
-        }
-        if(location[1]>maxOffsetY+statusBarHeight+toolbarLayout.height){
-            view.translationY=-(view.height-view.height*scale)/2
-        }else if(location[1]<minOffsetY+statusBarHeight+toolbarLayout.height){
-            view.translationY=-(view.height/2+view.height*scale/2-containerLayout.height)
-        }
-    }
+//    fun checkPosition(view: View){
+//        //状态栏高度
+//        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+//        val statusBarHeight = if (resourceId > 0) {
+//            resources.getDimensionPixelSize(resourceId)
+//        } else { 0 }
+//        //获取视图的绝对坐标 （相对于窗口左上角）
+//        val location=IntArray(2)
+//        view.getLocationInWindow(location)
+//        val containerLayout = findViewById<FragmentContainerView>(R.id.drawerFragment)
+//        val toolbarLayout=findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+//        val maxOffsetX = -(view.width/2-view.width*scale/2)
+//        val minOffsetX = -(view.width/2-width + view.width * scale/2)
+//        val maxOffsetY = -(view.height/2-view.height*scale/2)
+//        val minOffsetY = -(view.height/2-containerLayout.height + view.height * scale/2)
+//        if(location[0]>maxOffsetX){
+//            view.translationX=-(view.width-view.width*scale)/2
+//        }else if(location[0]<minOffsetX){
+//            view.translationX=-(view.width/2+view.width*scale/2-width)
+//        }
+//        if(location[1]>maxOffsetY+statusBarHeight+toolbarLayout.height){
+//            view.translationY=-(view.height-view.height*scale)/2
+//        }else if(location[1]<minOffsetY+statusBarHeight+toolbarLayout.height){
+//            view.translationY=-(view.height/2+view.height*scale/2-containerLayout.height)
+//        }
+//    }
 
     //设置初始显示为视图中心
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

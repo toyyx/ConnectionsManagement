@@ -12,11 +12,33 @@
 <!--        android:textSize="18dp"-->
 <!--        android:elevation="5dp"-->
 <!--        android:text="测试"/>-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <CheckBox
+            android:id="@+id/checkBoxOfFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关系1"/>
+        <CheckBox
+            android:id="@+id/checkBoxOfFamily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关系2"
+            android:layout_below="@+id/checkBoxOfFriend"/>
+        <CheckBox
+            android:id="@+id/checkBoxOfClassmate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关系3"
+            android:layout_below="@+id/checkBoxOfFamily"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ConnectionsMap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="3000dp"
+        android:layout_height="3000dp">
 
         <RelativeLayout
             android:id="@+id/ConnectionsHumanMap"
