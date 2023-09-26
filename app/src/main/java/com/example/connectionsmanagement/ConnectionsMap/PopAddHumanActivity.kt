@@ -6,9 +6,15 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,10 +34,39 @@ class PopAddHumanActivity : AppCompatActivity() {
     lateinit var imageUri: Uri  //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
     private lateinit var getPicturesFromAlbumActivity: ActivityResultLauncher<String> //相册获取图片-启动器
+    lateinit var selectedGender:String//选中性别
+    lateinit var selectedRelation:String//选中关系
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pop_add_human)
+
+        //关系下拉框配置
+        val spinner = findViewById<Spinner>(R.id.addRelationSpinner)
+        val items = resources.getStringArray(R.array.relation_items)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // 在选择不同选项时触发的操作
+                val selectedItem = parent?.getItemAtPosition(position).toString()
+                // 在这里处理选中的值（selectedItem）
+                selectedRelation=selectedItem
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // 当没有选项被选择时触发的操作
+            }
+        }
+
+        //性别单选处理
+        val radioGroup = findViewById<RadioGroup>(R.id.gender_radiogroup)
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            // 当选择不同的 RadioButton 时触发此回调
+            val radioButton = findViewById<RadioButton>(checkedId)
+            selectedGender = radioButton.text.toString()
+        }
+
         //拍照获取图片处理过程
         getPicturesFromCameraActivity =registerForActivityResult(ActivityResultContracts.TakePicture()){
             if(it) {
@@ -85,27 +120,38 @@ class PopAddHumanActivity : AppCompatActivity() {
             popupMenu.show()
         }
 
-        //确定按钮的功能
+        //确定按钮的功能：新增人物
         findViewById<Button>(R.id.popAddSureButton).setOnClickListener {
             //保存照片至本地
             val imageBitmap=getBitmapFromUri(imageUri)
             saveBitmap(imageBitmap)
-
             //转为将bitmap转为字节数组，便于后续数据库存储
             val stream = ByteArrayOutputStream()
-
             //quality设为100时，程序将因照片过大而崩溃，有待后续优化
             imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 75, stream)
             val imageByteArray = stream.toByteArray()
 
             //存储数据
-            val dbHelper= ConnectionsDatabaseHelper(this,"ConnectionsStore.db",1)
+            val dbHelper= ConnectionsDatabaseHelper(this,1)
             val db=dbHelper.writableDatabase
-            db.insert("Human",null, contentValuesOf(
-                "name" to "${findViewById<EditText>(R.id.addNameText).text.toString()}",
-                "notes" to "${findViewById<EditText>(R.id.addNotesText).text.toString()}",
-                "image_data" to imageByteArray)
-            )
+
+            //插入新人物信息到Person表，获取人物ID
+            var newPersonId=db.insert("Person",null, contentValuesOf(
+                "name" to findViewById<EditText>(R.id.addNameText).text.toString(),
+                "gender" to selectedGender,
+                "image_data" to imageByteArray,
+                "phone_number" to findViewById<EditText>(R.id.addPhoneText).text.toString(),
+                "email" to findViewById<EditText>(R.id.addEmailText).text.toString(),
+                "notes" to findViewById<EditText>(R.id.addNotesText).text.toString())
+            ).toInt()
+
+            //插入到Connections表
+            db.insert("Connections",null,contentValuesOf(
+                "userId" to ConnectionsManagementApplication.NowUserId,
+                "relationship" to selectedRelation,
+                "personId" to newPersonId
+            ))
+
             Toast.makeText(this,"创建成功",Toast.LENGTH_SHORT).show()
             finish()
         }

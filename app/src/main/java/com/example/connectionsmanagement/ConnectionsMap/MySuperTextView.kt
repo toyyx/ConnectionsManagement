@@ -1,18 +1,36 @@
 package com.example.connectionsmanagement.ConnectionsMap
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.view.Gravity
 import android.view.Gravity.CENTER_HORIZONTAL
 import android.widget.LinearLayout
 import com.coorchice.library.SuperTextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.PopupWindow
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
+import com.example.connectionsmanagement.R
+import de.hdodenhof.circleimageview.CircleImageView
 
 //自定义SuperTextView，包含两个SuperTextView，一上一下，上面图片，下面文本
 //备注:SuperTextView似乎存在着动态设置drawable时图片不可见的问题，仅当设置为背景时有效
 //备注:考虑到SuperTextView其余的强大功能，为方便后续设计，本项目仍希望采用它，特自定义此控件
-class MySuperTextView(imageBitmap: Bitmap,name:String):LinearLayout(ConnectionsManagementApplication.context,null) {
+ class MySuperTextView(thisId:Int,imageBitmap: Bitmap,name:String):LinearLayout(ConnectionsManagementApplication.context,null) {
     private lateinit var superTextViewTop:SuperTextView
     private lateinit var superTextViewButton:SuperTextView
+    val personId:Int=thisId
 
     init {
+        //设置头像
         layoutParams=LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         orientation= VERTICAL
         superTextViewTop=SuperTextView(context).apply {
@@ -24,6 +42,7 @@ class MySuperTextView(imageBitmap: Bitmap,name:String):LinearLayout(ConnectionsM
             layoutParams=diyParams
             corner=300f
         }
+        //设置姓名
         superTextViewButton=SuperTextView(context).apply {
             text=name
             gravity= CENTER_HORIZONTAL
@@ -33,4 +52,5 @@ class MySuperTextView(imageBitmap: Bitmap,name:String):LinearLayout(ConnectionsM
         addView(superTextViewTop)
         addView(superTextViewButton)
     }
+
 }

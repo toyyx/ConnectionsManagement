@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/resultFragmentRelativeLayout"
-    android:layout_width="3000dp"
-    android:layout_height="3000dp"
-    android:gravity="bottom|end">
-<!--    <TextView-->
-<!--        android:id="@+id/offsetWatch"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="18dp"-->
-<!--        android:elevation="5dp"-->
-<!--        android:text="测试"/>-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
+        android:layout_gravity="top|end"
+        android:elevation="3dp">
         <CheckBox
             android:id="@+id/checkBoxOfFriend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="关系1"/>
+            android:checked="true"
+            android:text="朋友"/>
         <CheckBox
             android:id="@+id/checkBoxOfFamily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="关系2"
+            android:text="亲人"
+            android:checked="true"
             android:layout_below="@+id/checkBoxOfFriend"/>
         <CheckBox
             android:id="@+id/checkBoxOfClassmate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="关系3"
+            android:text="同学"
+            android:checked="true"
             android:layout_below="@+id/checkBoxOfFamily"/>
+        <CheckBox
+            android:id="@+id/checkBoxOfOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="其他"
+            android:checked="true"
+            android:layout_below="@+id/checkBoxOfClassmate"/>
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/ConnectionsMap"
@@ -57,4 +60,4 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+</FrameLayout>

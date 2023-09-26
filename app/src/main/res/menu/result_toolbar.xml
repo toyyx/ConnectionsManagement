@@ -12,8 +12,8 @@
         android:title="添加人物"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/delHuman"
+        android:id="@+id/searchHuman"
         android:icon="@mipmap/ic_result_menu"
-        android:title="删除人物"
+        android:title="搜索人物"
         app:showAsAction="never" />
 </menu>

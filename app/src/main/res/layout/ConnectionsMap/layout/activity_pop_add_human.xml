@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 <RelativeLayout
-    android:layout_width="200dp"
+    android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:background="@drawable/pop_add_human_border">
-
     <TextView
         android:id="@+id/addTitle"
         android:layout_width="match_parent"
@@ -35,10 +34,10 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/addImage"
             android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_result_menu"/>
+            android:src="@mipmap/plus_sign"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/addNameLinearLayout"
@@ -65,13 +64,105 @@
             android:singleLine="true"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/addGenderLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/addNameLinearLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="性别："
+            android:textColor="#000000"/>
+        <RadioGroup
+            android:id="@+id/gender_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/gender_man"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男"/>
+            <RadioButton
+                android:id="@+id/gender_woman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女"/>
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/addRelationLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/addGenderLinearLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="关系："
+            android:textColor="#000000"/>
+        <Spinner
+            android:id="@+id/addRelationSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/addPhoneLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/addRelationLinearLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="电话："
+            android:textColor="#000000"/>
+        <EditText
+            android:id="@+id/addPhoneText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:maxLength="11"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/addEmailLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/addPhoneLinearLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="邮箱："
+            android:textColor="#000000"/>
+        <EditText
+            android:id="@+id/addEmailText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/addNotesLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
-        android:layout_below="@+id/addNameLinearLayout">
+        android:layout_below="@+id/addEmailLinearLayout">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

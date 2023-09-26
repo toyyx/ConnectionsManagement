@@ -8,10 +8,19 @@ class ConnectionsManagementApplication:Application() {
     companion object{
         @SuppressLint("StaticFieldLeak")
         lateinit var context:Context
+        var NowUserId:Int=-1//现在登录的用户ID
     }
 
     override fun onCreate() {
         super.onCreate()
         context =applicationContext
+    }
+
+    fun setUserId(id:Int){
+        NowUserId=id
+    }
+
+    fun getUserId():Int{
+        return NowUserId
     }
 }

@@ -1,14 +1,11 @@
 package com.example.connectionsmanagement.RegisterAndLogin
 
-class User(//用户名
-    var name: String, //密码
-    var password: String
+import android.graphics.Bitmap
+
+class User(
+    var id:Int,//用户id
+    var name: String, //用户名
+    var password: String//密码
 ) {
 
-    override fun toString(): String {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}'
-    }
 }

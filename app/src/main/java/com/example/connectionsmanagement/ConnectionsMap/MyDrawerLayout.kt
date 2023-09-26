@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentContainerView
 import com.example.connectionsmanagement.R
@@ -29,13 +30,12 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
         gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
                 val connectionsMapLayout= findViewById<RelativeLayout>(R.id.ConnectionsMap)
+                    //获取实际平移后的中心位置
+                    offsetX -=   distanceX
+                    offsetY -=   distanceY
 
-                //获取实际平移后的中心位置
-                offsetX -=   distanceX
-                offsetY -=   distanceY
-
-                //修正位置，展现最终平移后的视图
-                adjustPosition(connectionsMapLayout)
+                    //修正位置，展现最终平移后的视图
+                    adjustPosition(connectionsMapLayout)
                 return true
             }
         })
@@ -130,6 +130,11 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
 
     //处理触摸事件
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        // 检查右侧栏是否处于打开状态
+        if (isDrawerOpen(GravityCompat.START) or isDrawerOpen(GravityCompat.END)) {
+            // 如果右侧栏打开，不执行自定义触摸操作
+            return super.onTouchEvent(event)
+        }
         // 让 DrawerLayout 处理它的默认行为 如：侧边菜单打开时，点击阴影处，将关闭菜单
         super.onTouchEvent(event)
 

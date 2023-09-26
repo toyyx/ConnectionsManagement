@@ -11,9 +11,11 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.ConnectionsMap.ResultActivity
+import de.hdodenhof.circleimageview.CircleImageView
 
 /**
  * 此类 implements View.OnClickListener 之后，
@@ -27,7 +29,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      * 创建数据表
      * 然后再进行数据表的增、删、改、查操作
      */
-    private var mDBOpenHelper: DBOpenHelper? = null
+    private var mDBOpenHelper: ConnectionsDatabaseHelper? = null
     private var mTvLoginactivityRegister: TextView? = null
     private var mRlLoginactivityTop: RelativeLayout? = null
     private var mEtLoginactivityUsername: EditText? = null
@@ -50,7 +52,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initView()
-        mDBOpenHelper = DBOpenHelper(this)
+        mDBOpenHelper = ConnectionsDatabaseHelper(this,1)
         // 设置点击事件监听器
         mBtLoginactivityLogin?.setOnClickListener(this)
         mTvLoginactivityRegister?.setOnClickListener(this)
@@ -92,6 +94,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         val user = data[i]
                         if (name == user.name && password == user.password) {
                             match = true
+                            ConnectionsManagementApplication.NowUserId=user.id //获取登录用户ID
                             break
                         } else {
                             match = false

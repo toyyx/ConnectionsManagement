@@ -18,7 +18,7 @@
             android:exported="false" />
         <activity
             android:name=".RegisterAndLogin.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +35,6 @@
             android:exported="false"
             android:label="人际关系展示"
             android:launchMode="singleTask" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.connectionsmanegement.fileprovider"

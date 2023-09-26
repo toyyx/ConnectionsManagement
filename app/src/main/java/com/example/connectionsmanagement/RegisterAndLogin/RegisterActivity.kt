@@ -1,6 +1,10 @@
 package com.example.connectionsmanagement.RegisterAndLogin
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -10,9 +14,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.FileProvider
+import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
+import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.ConnectionsMap.ResultActivity
+import de.hdodenhof.circleimageview.CircleImageView
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.time.LocalDateTime
 import java.util.Locale
 
 /**
@@ -22,7 +36,7 @@ import java.util.Locale
  */
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private var realCode: String? = null
-    var mDBOpenHelper: DBOpenHelper? = null
+    var mDBOpenHelper: ConnectionsDatabaseHelper? = null
     private var mBtRegisteractivityRegister: Button? = null
     private var mRlRegisteractivityTop: RelativeLayout? = null
     private var mIvRegisteractivityBack: ImageView? = null
@@ -34,12 +48,17 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private var mIvRegisteractivityShowcode:ImageView?=null
     private var mRlRegisteractivityBottom: RelativeLayout? = null
 
+    //
+    lateinit var imageUri: Uri  //图片地址
+    private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
+    private lateinit var getPicturesFromAlbumActivity: ActivityResultLauncher<String> //相册获取图片-启动器
+    //
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         initView()
-        mDBOpenHelper = DBOpenHelper(this)
+        mDBOpenHelper = ConnectionsDatabaseHelper(this,1)
 
         //将验证码用图片的形式显示出来
         mIvRegisteractivityShowcode?.setImageBitmap(Code.instance?.createBitmap())
@@ -48,6 +67,55 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         mIvRegisteractivityBack?.setOnClickListener(this)
         mIvRegisteractivityShowcode?.setOnClickListener(this)
         mBtRegisteractivityRegister?.setOnClickListener(this)
+
+        //
+        //拍照获取图片处理过程
+        getPicturesFromCameraActivity =registerForActivityResult(ActivityResultContracts.TakePicture()){
+            if(it) {
+                val imageView: ImageView? =findViewById<CircleImageView>(R.id.tv_registeractivity_userimage)
+                imageView?.setImageURI(imageUri)
+            }
+        }
+        //相册获取图片处理过程
+        getPicturesFromAlbumActivity = registerForActivityResult(ActivityResultContracts.GetContent()) {
+            val imageView: ImageView? =findViewById<CircleImageView>(R.id.tv_registeractivity_userimage)
+            imageView?.setImageURI(it)
+            imageUri=it
+        }
+
+        //设置人物图像并保存至本地
+        findViewById<CircleImageView>(R.id.tv_registeractivity_userimage).setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menuInflater.inflate(R.menu.camera_or_album,popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    //拍照获取图片
+                    R.id.menu_camera -> {
+                        //设置图片存储位置
+                        val humanImage= File(externalCacheDir,"human_image${LocalDateTime.now()}.jpg")
+                        if(!humanImage.exists()){
+                            humanImage.createNewFile()
+                        }
+                        //获取uri
+                        imageUri=if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
+                            FileProvider.getUriForFile(this,"com.example.connectionsmanegement.fileprovider",humanImage)
+                        }else{
+                            Uri.fromFile(humanImage)
+                        }
+                        getPicturesFromCameraActivity.launch(imageUri)
+                        true
+                    }
+                    //从相册获取图片
+                    R.id.menu_album -> {
+                        getPicturesFromAlbumActivity.launch("image/*")
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
+        }
+        //
     }
 
     private fun initView() {
@@ -82,20 +150,29 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.bt_registeractivity_register -> {
+                //保存照片至本地
+                val imageBitmap=getBitmapFromUri(imageUri)
+                //转为将bitmap转为字节数组，便于后续数据库存储
+                val stream = ByteArrayOutputStream()
+                //quality设为100时，程序将因照片过大而崩溃，有待后续优化
+                imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 75, stream)
+                val imageByteArray = stream.toByteArray()
+
                 //获取用户输入的用户名、密码、验证码
                 val username = mEtRegisteractivityUsername?.text.toString().trim { it <= ' ' }
                 val password = mEtRegisteractivityPassword2?.text.toString().trim { it <= ' ' }
-                val phoneCode =
-                    mEtRegisteractivityPhonecodes?.text.toString().lowercase(Locale.getDefault())
+                val phoneCode = mEtRegisteractivityPhonecodes?.text.toString().lowercase(Locale.getDefault())
                 //注册验证
                 if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(
                         phoneCode
                     )
                 ) {
                     if (phoneCode == realCode) {
-                        //将用户名和密码加入到数据库中
-                        mDBOpenHelper?.add(username, password)
-                        val intent2 = Intent(this, ResultActivity::class.java)
+                        //将用户名和密码加入到数据库中,加入用户个人信息
+                        ConnectionsManagementApplication.NowUserId= mDBOpenHelper?.addUser(username, password)!!
+                        mDBOpenHelper?.addUserInformation(ConnectionsManagementApplication.NowUserId,username,imageByteArray)
+
+                        val intent2 = Intent(this, LoginActivity::class.java)
                         startActivity(intent2)
                         finish()
                         Toast.makeText(this, "验证通过，注册成功", Toast.LENGTH_SHORT).show()
@@ -108,4 +185,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+    //uri转变为bitmap
+    fun getBitmapFromUri(uri:Uri?)=uri?.let {  contentResolver.openFileDescriptor(uri,"r")?.use {
+        BitmapFactory.decodeFileDescriptor(it.fileDescriptor) }}
 }
