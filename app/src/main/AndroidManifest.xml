@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    
     <application
         android:name=".ConnectionsMap.ConnectionsManagementApplication"
         android:allowBackup="true"
@@ -13,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ConnectionsManagement"
         tools:targetApi="31">
+
         <activity
             android:name=".RegisterAndLogin.RegisterActivity"
             android:exported="false" />
@@ -25,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterAndLogin.MainActivity" />
         <activity
             android:name=".ConnectionsMap.PopAddHumanActivity"
             android:exported="false"
@@ -35,6 +37,9 @@
             android:exported="false"
             android:label="人际关系展示"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".ConnectionsMap.MainActivity"
+            android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.connectionsmanegement.fileprovider"

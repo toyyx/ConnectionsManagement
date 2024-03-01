@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
+import com.example.connectionsmanagement.ConnectionsMap.MainActivity
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.ConnectionsMap.ResultActivity
 import de.hdodenhof.circleimageview.CircleImageView
@@ -103,7 +104,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     if (match) {
                         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, ResultActivity::class.java)
+                        val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish() //销毁此Activity
                     } else {
