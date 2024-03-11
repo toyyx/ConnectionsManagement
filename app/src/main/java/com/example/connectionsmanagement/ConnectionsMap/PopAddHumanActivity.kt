@@ -1,6 +1,7 @@
 package com.example.connectionsmanagement.ConnectionsMap
 
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -22,11 +23,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import androidx.core.content.contentValuesOf
+import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getFileFromURI
 import com.example.connectionsmanagement.R
+import com.example.connectionsmanagement.RegisterAndLogin.LoginActivity
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.time.LocalDateTime
 
 
@@ -122,38 +136,65 @@ class PopAddHumanActivity : AppCompatActivity() {
 
         //确定按钮的功能：新增人物
         findViewById<Button>(R.id.popAddSureButton).setOnClickListener {
-            //保存照片至本地
-            val imageBitmap=getBitmapFromUri(imageUri)
-            saveBitmap(imageBitmap)
-            //转为将bitmap转为字节数组，便于后续数据库存储
-            val stream = ByteArrayOutputStream()
-            //quality设为100时，程序将因照片过大而崩溃，有待后续优化
-            imageBitmap?.compress(Bitmap.CompressFormat.JPEG, 75, stream)
-            val imageByteArray = stream.toByteArray()
+            //获取用户选择的图片文件
+            val selectedImageFile = getFileFromURI(imageUri)
+            // 创建OkHttpClient实例
+            val client = OkHttpClient()
+            // 构建MultipartBody，用于上传图片
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("userId",ConnectionsManagementApplication.NowUser.userId.toString())
+                .addFormDataPart("relationship",selectedRelation)
+                .addFormDataPart("name",findViewById<EditText>(R.id.addNameText).text.toString())
+                .addFormDataPart("gender",selectedGender)
+                .addFormDataPart("phone_number",findViewById<EditText>(R.id.addPhoneText).text.toString())
+                .addFormDataPart("email",findViewById<EditText>(R.id.addEmailText).text.toString())
+                .addFormDataPart("notes",findViewById<EditText>(R.id.addNotesText).text.toString())
+                .addFormDataPart("image", "avatar.jpg",
+                    selectedImageFile!!.asRequestBody("image/*".toMediaTypeOrNull()))
+                .build()
 
-            //存储数据
-            val dbHelper= ConnectionsDatabaseHelper(this,1)
-            val db=dbHelper.writableDatabase
+            // 创建POST请求
+            val request = Request.Builder()
+                .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/AddRelationServlet")
+                .post(requestBody)
+                .build()
 
-            //插入新人物信息到Person表，获取人物ID
-            var newPersonId=db.insert("Person",null, contentValuesOf(
-                "name" to findViewById<EditText>(R.id.addNameText).text.toString(),
-                "gender" to selectedGender,
-                "image_data" to imageByteArray,
-                "phone_number" to findViewById<EditText>(R.id.addPhoneText).text.toString(),
-                "email" to findViewById<EditText>(R.id.addEmailText).text.toString(),
-                "notes" to findViewById<EditText>(R.id.addNotesText).text.toString())
-            ).toInt()
-
-            //插入到Connections表
-            db.insert("Connections",null,contentValuesOf(
-                "userId" to ConnectionsManagementApplication.NowUserId,
-                "relationship" to selectedRelation,
-                "personId" to newPersonId
-            ))
-
-            Toast.makeText(this,"创建成功",Toast.LENGTH_SHORT).show()
-            finish()
+            // 发送请求并处理响应
+            client.newCall(request).enqueue(object : Callback {
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    // 处理服务器响应，根据需要更新UI或执行其他操作
+                    val responseBody =  response.body?.string()//JsonString
+                    if (responseBody != null) {
+                        // 处理服务器响应内容，这里的 responseBody 就是网页内容
+                        // 可以在这里对网页内容进行解析、处理等操作
+                        println("Server Response: $responseBody")
+                        runOnUiThread {
+                            // 将JSON字符串解析为JsonObject
+                            val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
+                            // 读取特定键的值
+                            val result = jsonObject["result"].asString
+                            if(result=="success"){
+                                Toast.makeText(ConnectionsManagementApplication.context,"新增关系成功",Toast.LENGTH_SHORT).show()
+                                ConnectionsManagementApplication.IsRelationsChanged=true
+                            }else{
+                                Toast.makeText(ConnectionsManagementApplication.context,"新增关系失败",Toast.LENGTH_SHORT).show()
+                            }
+                            finish()
+                        }
+                    }
+                }
+                override fun onFailure(call: okhttp3.Call, e: IOException) {
+                    runOnUiThread {
+                        // 处理请求失败情况，例如网络连接问题
+                        Toast.makeText(
+                            ConnectionsManagementApplication.context,
+                            "网络连接失败",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            })
         }
     }
 

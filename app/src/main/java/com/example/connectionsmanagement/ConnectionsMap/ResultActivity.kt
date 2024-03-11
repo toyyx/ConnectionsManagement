@@ -59,7 +59,7 @@ class ResultActivity : AppCompatActivity() {
                 val table1="Connections"//表1
                 val table2="Person"//表2
                 val joinCondition = "Connections.personId = Person.personId" // 两表的连接条件
-                val cursor = db.query("$table1 INNER JOIN $table2 ON $joinCondition", null, "userId=? and name LIKE ?", arrayOf("${ConnectionsManagementApplication.NowUserId}","%$input%"), null, null, null)
+                val cursor = db.query("$table1 INNER JOIN $table2 ON $joinCondition", null, "userId=? and name LIKE ?", arrayOf("${ConnectionsManagementApplication.NowUser.userId}","%$input%"), null, null, null)
                 if (cursor.moveToFirst()) {
                     do{
                         var imageByteArray = cursor.getBlob(cursor.getColumnIndex("image_data"))
@@ -93,7 +93,7 @@ class ResultActivity : AppCompatActivity() {
         // 获取 NavigationView 的 headerLayout 视图
         val headerView = navigationView?.getHeaderView(0)
         //数据库中查询用户信息
-        val cursor = db.query("UserInformation", null, "userId=?", arrayOf("${ConnectionsManagementApplication.NowUserId}"), null, null, null)
+        val cursor = db.query("UserInformation", null, "userId=?", arrayOf("${ConnectionsManagementApplication.NowUser.userId}"), null, null, null)
         if (cursor.moveToFirst()) {
             var name = cursor.getString(cursor.getColumnIndex("name"))
             var email = cursor.getString(cursor.getColumnIndex("email"))

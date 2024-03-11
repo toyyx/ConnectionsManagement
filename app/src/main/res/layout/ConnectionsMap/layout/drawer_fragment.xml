@@ -41,7 +41,8 @@
     <RelativeLayout
         android:id="@+id/ConnectionsMap"
         android:layout_width="3000dp"
-        android:layout_height="3000dp">
+        android:layout_height="3000dp"
+        android:layout_gravity="center">
 
         <RelativeLayout
             android:id="@+id/ConnectionsHumanMap"

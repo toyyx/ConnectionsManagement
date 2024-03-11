@@ -23,7 +23,8 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
     private var scale = 1f
     private var offsetX = 0f
     private var offsetY = 0f
-    private var firstTouch=true
+    private var firstTouch = true
+
 
     init {
         //设置平移功能
@@ -44,7 +45,7 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
         scaleGestureDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.OnScaleGestureListener {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
                 val connectionsMapLayout: RelativeLayout = findViewById(R.id.ConnectionsMap)  //需要缩放的视图
-                val containerLayout= findViewById<FragmentContainerView>(R.id.drawerFragment) //借助此视图，方便获取关系图显示区域的宽高
+                val containerLayout= findViewById<FragmentContainerView>(R.id.fragment_container) //借助此视图，方便获取关系图显示区域的宽高
                 val scaleFactor = detector.scaleFactor ?: 1f
                 scale *= scaleFactor //缩放后的倍数
                 val minScale = max(width/dpToPx(3000) ,containerLayout.height/dpToPx(3000)) //最小倍数
@@ -72,7 +73,7 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
     //修正视图位置
     //备注：translationX/Y函数是相对于原视图中心点的偏移
     private fun adjustPosition(view: View) {
-        val containerLayout = findViewById<FragmentContainerView>(R.id.drawerFragment)
+        val containerLayout = findViewById<FragmentContainerView>(R.id.fragment_container)
         //计算X/Y轴上最大/小偏移量
         val maxOffsetX = -(view.width/2-view.width*scale/2)
         val minOffsetX = -(view.width/2-width + view.width * scale/2)
@@ -117,15 +118,15 @@ class MyDrawerLayout (context: Context, attrs: AttributeSet) : DrawerLayout(cont
     //设置初始显示为视图中心
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        if (firstTouch) {
-            val connectionsMapLayout = findViewById<RelativeLayout>(R.id.ConnectionsMap)
-            val containerLayout= findViewById<FragmentContainerView>(R.id.drawerFragment)
-            offsetX = (width - connectionsMapLayout.width) / 2f
-            offsetY = (containerLayout.height - connectionsMapLayout.height) / 2f
-            connectionsMapLayout.translationX = offsetX
-            connectionsMapLayout.translationY = offsetY
-            firstTouch = false
-        }
+//        if (firstTouch) {
+//            val connectionsMapLayout = findViewById<RelativeLayout>(R.id.ConnectionsMap)
+//            val containerLayout= findViewById<FragmentContainerView>(R.id.fragment_container)
+//            offsetX = (width - connectionsMapLayout.width) / 2f
+//            offsetY = (containerLayout.height - connectionsMapLayout.height) / 2f
+//            connectionsMapLayout.translationX = offsetX
+//            connectionsMapLayout.translationY = offsetY
+//            firstTouch = false
+//        }
     }
 
     //处理触摸事件

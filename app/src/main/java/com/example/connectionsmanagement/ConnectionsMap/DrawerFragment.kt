@@ -3,16 +3,20 @@ package com.example.connectionsmanagement.ConnectionsMap
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -20,30 +24,86 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.contentValuesOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentContainerView
+import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getBitmapFromLocalPath
+import com.example.connectionsmanagement.MysqlServer.MySQLConnection
+import com.example.connectionsmanagement.MysqlServer.Relation
 import com.example.connectionsmanagement.R
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
- class DrawerFragment : Fragment() {
+
+class DrawerFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     //展示关系选中变量
-    var selected_relation_friend:Boolean=true
-    var selected_relation_family:Boolean=true
-    var selected_relation_classmate:Boolean=true
-    var selected_relation_other:Boolean=true
     lateinit var thisView:View
+    var selectedRelations = arrayListOf("朋友","亲人", "同学", "其他")
+
+    val popupLayout = LayoutInflater.from(ConnectionsManagementApplication.context).inflate(R.layout.pop_human_detail, null)
+    //获取浏览、编辑状态的控件
+    val humanImage = popupLayout.findViewById<CircleImageView>(R.id.popImage)
+    val humanName_edit = popupLayout.findViewById<EditText>(R.id.popNameEditText)
+    val humanGender_edit = popupLayout.findViewById<EditText>(R.id.popGenderEditText)
+    val humanPhone_edit = popupLayout.findViewById<EditText>(R.id.popPhoneEditText)
+    val humanEmail_edit = popupLayout.findViewById<EditText>(R.id.popEmailEditText)
+    val humanNotes_edit = popupLayout.findViewById<EditText>(R.id.popNotesEditText)
+    val yes_to_adjust_button=popupLayout.findViewById<Button>(R.id.YesToAdjust)
+    val no_to_adjust_button=popupLayout.findViewById<Button>(R.id.NoToAdjust)
+
+    //设置平移与缩放所需变量
+    lateinit var gestureDetector: GestureDetector
+    lateinit var scaleGestureDetector: ScaleGestureDetector
+    private var scale = 1f
+    private var offsetX = 0f
+    private var offsetY = 0f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreate", Toast.LENGTH_SHORT).show()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onStart", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
         super.onResume()
-        refresh()
+        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onResume", Toast.LENGTH_SHORT).show()
+        if(ConnectionsManagementApplication.IsRelationsChanged==true) {
+            ConnectionsManagementApplication.IsRelationsChanged=false
+            GlobalScope.launch {
+                val job=async {ImageDownloader.RefreshRelations()}
+                job.await()
+                withContext(Dispatchers.Main) {
+                    refresh()
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -52,123 +112,162 @@ import kotlin.math.sqrt
     ): View? {
         //关系选择发生变动后刷新界面
         thisView = inflater.inflate(R.layout.drawer_fragment, container, false)
-        thisView.findViewById<CheckBox>(R.id.checkBoxOfFriend).setOnCheckedChangeListener { buttonView, isChecked ->
+
+        thisView.findViewById<CheckBox>(R.id.checkBoxOfFriend).setOnCheckedChangeListener { _, isChecked ->
             // 当 CheckBox 的选中状态发生变化时触发的操作
-            selected_relation_friend = isChecked
+            if(isChecked){
+                selectedRelations.add("朋友")
+            }else{
+                selectedRelations.remove("朋友")
+            }
+
             refresh()
         }
         thisView.findViewById<CheckBox>(R.id.checkBoxOfFamily).setOnCheckedChangeListener { buttonView, isChecked ->
             // 当 CheckBox 的选中状态发生变化时触发的操作
-            selected_relation_family = isChecked
+            if(isChecked){
+                selectedRelations.add("亲人")
+            }else{
+                selectedRelations.remove("亲人")
+            }
             refresh()
         }
         thisView.findViewById<CheckBox>(R.id.checkBoxOfClassmate).setOnCheckedChangeListener { buttonView, isChecked ->
             // 当 CheckBox 的选中状态发生变化时触发的操作
-            selected_relation_classmate = isChecked
+            if(isChecked){
+                selectedRelations.add("同学")
+            }else{
+                selectedRelations.remove("同学")
+            }
             refresh()
         }
         thisView.findViewById<CheckBox>(R.id.checkBoxOfOther).setOnCheckedChangeListener { buttonView, isChecked ->
             // 当 CheckBox 的选中状态发生变化时触发的操作
-            selected_relation_other = isChecked
+            if(isChecked){
+                selectedRelations.add("其他")
+            }else{
+                selectedRelations.remove("其他")
+            }
             refresh()
         }
+
+        //设置平移功能
+        gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+                val connectionsMapLayout= thisView.findViewById<RelativeLayout>(R.id.ConnectionsMap)
+                //获取实际平移后的中心位置
+                offsetX -=   distanceX
+                offsetY -=   distanceY
+
+                //修正位置，展现最终平移后的视图
+                adjustPosition(connectionsMapLayout)
+                return true
+            }
+        })
+
+        //设置缩放功能
+        scaleGestureDetector = ScaleGestureDetector(ConnectionsManagementApplication.context, object : ScaleGestureDetector.OnScaleGestureListener {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val connectionsMapLayout: RelativeLayout = thisView.findViewById(R.id.ConnectionsMap)  //需要缩放的视图
+                val containerLayout= requireActivity().findViewById<FragmentContainerView>(R.id.fragment_container) //借助此视图，方便获取关系图显示区域的宽高
+                val scaleFactor = detector.scaleFactor ?: 1f
+                scale *= scaleFactor //缩放后的倍数
+                val minScale = java.lang.Float.max(
+                    thisView.width / dpToPx(3000),
+                    thisView.height / dpToPx(3000)
+                ) //最小倍数
+                val maxScale = 3f //最大倍数
+                scale = java.lang.Float.max(minScale, java.lang.Float.min(scale, maxScale)) //修正后的倍数
+
+                //缩放视图
+                connectionsMapLayout.scaleX = scale
+                connectionsMapLayout.scaleY = scale
+
+                //修正视图
+                adjustPosition(connectionsMapLayout)
+
+                return true
+            }
+            override fun onScaleBegin(detector: ScaleGestureDetector): Boolean=true
+            override fun onScaleEnd(detector: ScaleGestureDetector) {}
+        })
+
+        thisView.setOnTouchListener { _, event ->
+            // 让 DrawerLayout 处理它的默认行为 如：侧边菜单打开时，点击阴影处，将关闭菜单
+            //super.onTouchEvent(event)
+
+            //自定义处理触摸事件
+            gestureDetector.onTouchEvent(event)
+            scaleGestureDetector.onTouchEvent(event)
+            if (event.action == MotionEvent.ACTION_UP) {
+                thisView.performClick()
+            }
+            return@setOnTouchListener true
+        }
+        refresh()
         return thisView
     }
+
 
     companion object {
         // TODO: Rename and change types and number of parameters
 
     }
 
+    fun dpToPx(dp: Int): Float {
+        return dp * ConnectionsManagementApplication.context.resources.displayMetrics.density
+    }
+
+    //修正视图位置
+    //备注：translationX/Y函数是相对于原视图中心点的偏移
+    private fun adjustPosition(view: View) {
+        //计算X/Y轴上最大/小偏移量
+        val maxOffsetX = view.width * scale/2-thisView.width/2
+        val minOffsetX = -(view.width * scale/2-thisView.width/2)
+        val maxOffsetY = view.height * scale/2-thisView.height/2
+        val minOffsetY = -(view.height * scale/2-thisView.height/2)
+
+        //调整位置
+        offsetX = java.lang.Float.min(maxOffsetX, java.lang.Float.max(offsetX, minOffsetX))
+        offsetY = java.lang.Float.min(maxOffsetY, java.lang.Float.max(offsetY, minOffsetY))
+        view.translationX = offsetX
+        view.translationY = offsetY
+    }
 
     //刷新人脉图谱
-    @SuppressLint("Range")
     fun refresh() {
-        //连接数据库
-        val dbHelper = ConnectionsDatabaseHelper(ConnectionsManagementApplication.context, 1)
-        val db = dbHelper.writableDatabase
         val relativeHumanLayout = thisView.findViewById<RelativeLayout>(R.id.ConnectionsHumanMap)
         val relativeLineLayout = thisView.findViewById<RelativeLayout>(R.id.ConnectionsLineMap)
         val connectionsList: ArrayList<MySuperTextView> = arrayListOf()
         lateinit var userSuperTextView:MySuperTextView
 
         //查询用户信息并创建视图
-        val userCursor = db.query("UserInformation", null, "userId=?", arrayOf("${ConnectionsManagementApplication.NowUserId}"), null, null, null)
-        if (userCursor.moveToFirst()) {
-            val name = userCursor.getString(userCursor.getColumnIndex("name"))
-            //从数据库取出Bitmap数据
-            val imageByteArray = userCursor.getBlob(userCursor.getColumnIndex("image_data"))
-            val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-            //创建人物视图
-            userSuperTextView = MySuperTextView(0,imageBitmap, name)
-        }
-        userCursor.close()
+        userSuperTextView=MySuperTextView(0,getBitmapFromLocalPath(ConnectionsManagementApplication.NowUser.image_path!!),ConnectionsManagementApplication.NowUser.name!!)
 
-        //查询用户的人物关系（Connections表与Person表联合查询）
-        val table1="Connections"//查询表1
-        val table2="Person"//查询表2
-        val joinCondition = "Connections.personId = Person.personId" // 两表的连接条件
-        val valuesToMatch:ArrayList<String> = arrayListOf()  // 选中关系的匹配集合
-        if(selected_relation_friend) {valuesToMatch.add("朋友")}
-        if(selected_relation_family) {valuesToMatch.add("亲人")}
-        if(selected_relation_classmate) {valuesToMatch.add("同学")}
-        if(selected_relation_other) {valuesToMatch.add("其他")}
-        //以用户ID、关系为查询条件
-        val selection = "userId = ? and relationship IN (${valuesToMatch.joinToString(", ") { "?" }})" // 生成类似 "your_column IN (?, ?, ?)" 的条件
-        val selectionArgs = arrayOf("${ConnectionsManagementApplication.NowUserId}")+ valuesToMatch.toTypedArray() // 使用集合中的值作为参数
-        val cursor = db.query("$table1 INNER JOIN $table2 ON $joinCondition", null, selection, selectionArgs, null, null, null)
-        if (cursor.moveToFirst()) {
-            do {
-                //查询到的人物信息
-                val id = cursor.getInt(cursor.getColumnIndex("personId"))
-                val name = cursor.getString(cursor.getColumnIndex("name"))
-                val gender=cursor.getString(cursor.getColumnIndexOrThrow("gender"))
-                val phone_number=cursor.getString(cursor.getColumnIndexOrThrow("phone_number"))
-                val email=cursor.getString(cursor.getColumnIndexOrThrow("email"))
-                val notes=cursor.getString(cursor.getColumnIndexOrThrow("notes"))
-                val imageByteArray = cursor.getBlob(cursor.getColumnIndex("image_data"))
-                val imageBitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+        //查询用户的人物关系
+        ConnectionsManagementApplication.NowRelations.forEach {
+            if(selectedRelations.contains(it.relationship)){
+                val temp_relation=it
                 //创建人物视图
-                val mySuperTextView = MySuperTextView(id,imageBitmap, name)
+                val mySuperTextView = MySuperTextView(it.personId, getBitmapFromLocalPath(it.image_path), it.name)
                 //将视图存入关系队列
                 connectionsList.add(mySuperTextView)
                 //设置人物详情弹窗
                 mySuperTextView.setOnClickListener {
-                    val layoutInflater = LayoutInflater.from(ConnectionsManagementApplication.context)
-                    val popupLayout = layoutInflater.inflate(R.layout.pop_human_detail, null)
-                    //获取浏览、编辑状态的控件
-                    val humanImage = popupLayout.findViewById<CircleImageView>(R.id.popImage)
-                    val humanName = popupLayout.findViewById<TextView>(R.id.popNameText)
-                    val humanGender = popupLayout.findViewById<TextView>(R.id.popGenderText)
-                    val humanPhone = popupLayout.findViewById<TextView>(R.id.popPhoneText)
-                    val humanEmail = popupLayout.findViewById<TextView>(R.id.popEmailText)
-                    val humanNotes = popupLayout.findViewById<TextView>(R.id.popNotesText)
-
-                    val humanName_edit = popupLayout.findViewById<EditText>(R.id.popNameEditText)
-                    val humanGender_edit = popupLayout.findViewById<EditText>(R.id.popGenderEditText)
-                    val humanPhone_edit = popupLayout.findViewById<EditText>(R.id.popPhoneEditText)
-                    val humanEmail_edit = popupLayout.findViewById<EditText>(R.id.popEmailEditText)
-                    val humanNotes_edit = popupLayout.findViewById<EditText>(R.id.popNotesEditText)
-                    val yes_to_adjust_button=popupLayout.findViewById<Button>(R.id.YesToAdjust)
-                    val no_to_adjust_button=popupLayout.findViewById<Button>(R.id.NoToAdjust)
-
                     //将查询到的人物信息显示出来
-                    humanImage.setImageBitmap(imageBitmap)
-                    humanName.text=name
-                    humanGender.text=gender
-                    humanPhone.text=phone_number
-                    humanEmail.text=email
-                    humanNotes.text=notes
+                    humanImage.setImageBitmap(getBitmapFromLocalPath(temp_relation.image_path))
+                    humanName_edit.setText(temp_relation.name)
+                    humanGender_edit.setText(temp_relation.gender)
+                    humanPhone_edit.setText(temp_relation.phone_number)
+                    humanEmail_edit.setText(temp_relation.email)
+                    humanNotes_edit.setText(temp_relation.notes)
 
                     // 创建人物详情弹窗
                     val popupWindow = PopupWindow(popupLayout, dpToPx(200).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT, true)
                     // 设置点击外部区域关闭 PopupWindow
                     popupWindow.isOutsideTouchable = false
+                    popupWindow.setBackgroundDrawable(ColorDrawable(80000000))
                     popupWindow.showAtLocation(thisView, Gravity.CENTER, 0, 0)
-                    // 调整内容视图的位置以使其居中
-                    val contentView = popupWindow.contentView
-                    contentView.translationX = -contentView.width / 2f
-                    contentView.translationY = -contentView.height / 2f
 
                     //设置弹窗右上角操作菜单
                     popupLayout.findViewById<Button>(R.id.popOperationButton).setOnClickListener {
@@ -179,35 +278,82 @@ import kotlin.math.sqrt
                                 // 处理修改的点击事件
                                 R.id.menu_adjust -> {
                                     //切换显示控件（转化为可编辑控件）
-                                    humanName.visibility=View.GONE
-                                    humanGender.visibility=View.GONE
-                                    humanPhone.visibility=View.GONE
-                                    humanEmail.visibility=View.GONE
-                                    humanNotes.visibility=View.GONE
-                                    humanName_edit.visibility=View.VISIBLE
-                                    humanGender_edit.visibility=View.VISIBLE
-                                    humanPhone_edit.visibility=View.VISIBLE
-                                    humanEmail_edit.visibility=View.VISIBLE
-                                    humanNotes_edit.visibility=View.VISIBLE
-                                    humanName_edit.setText(humanName.text)
-                                    humanGender_edit.setText(humanGender.text)
-                                    humanPhone_edit.setText(humanPhone.text)
-                                    humanEmail_edit.setText(humanEmail.text)
-                                    humanNotes_edit.setText(humanNotes.text)
+                                    humanName_edit.isEnabled=true
+                                    humanGender_edit.isEnabled=true
+                                    humanPhone_edit.isEnabled=true
+                                    humanEmail_edit.isEnabled=true
+                                    humanNotes_edit.isEnabled=true
                                     yes_to_adjust_button.visibility=View.VISIBLE
                                     no_to_adjust_button.visibility=View.VISIBLE
                                     //确定修改人物信息
                                     yes_to_adjust_button.setOnClickListener {
-                                        db.update("Person", contentValuesOf(
-                                            "name" to humanName_edit.text.toString(),
-                                            "gender" to humanGender_edit.text.toString(),
-                                            "phone_number" to humanPhone_edit.text.toString(),
-                                            "email" to humanEmail_edit.text.toString(),
-                                            "notes" to humanNotes_edit.text.toString(),),"personId=?", arrayOf("$id"))
-                                        refresh()//刷新界面
+                                        // 创建OkHttpClient实例
+                                        val client = OkHttpClient()
+
+                                        // 构建MultipartBody，用于上传图片
+                                        val requestBody = MultipartBody.Builder()
+                                            .setType(MultipartBody.FORM)
+                                            .addFormDataPart("personId",temp_relation.personId.toString())
+                                            .addFormDataPart("name",humanName_edit.text.toString())
+                                            .addFormDataPart("gender",humanGender_edit.text.toString())
+                                            .addFormDataPart("phone_number",humanPhone_edit.text.toString())
+                                            .addFormDataPart("email",humanEmail_edit.text.toString())
+                                            .addFormDataPart("notes",humanNotes_edit.text.toString())
+                                            .build()
+
+                                        // 创建POST请求
+                                        val request = Request.Builder()
+                                            .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/UpdateRelationServlet")
+                                            .post(requestBody)
+                                            .build()
+
+                                        // 发送请求并处理响应
+                                        client.newCall(request).enqueue(object : Callback {
+                                            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                                                // 处理服务器响应，根据需要更新UI或执行其他操作
+                                                val responseBody =  response.body?.string()//JsonString
+                                                if (responseBody != null) {
+                                                    // 处理服务器响应内容，这里的 responseBody 就是网页内容
+                                                    // 可以在这里对网页内容进行解析、处理等操作
+                                                    println("Server Response: $responseBody")
+                                                    activity?.runOnUiThread {
+                                                        // 将JSON字符串解析为JsonObject
+                                                        val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
+                                                        // 读取特定键的值
+                                                        if(jsonObject["result"].asString=="success"){
+                                                            Toast.makeText(ConnectionsManagementApplication.context,"修改关系成功",Toast.LENGTH_SHORT).show()
+                                                            ConnectionsManagementApplication.IsRelationsChanged=true
+                                                        }else{
+                                                            Toast.makeText(ConnectionsManagementApplication.context,"修改关系失败",Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                                                activity?.runOnUiThread {
+                                                    // 处理请求失败情况，例如网络连接问题
+                                                    Toast.makeText(ConnectionsManagementApplication.context, "网络连接失败", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                        })
+                                        humanName_edit.isEnabled=false
+                                        humanGender_edit.isEnabled=false
+                                        humanPhone_edit.isEnabled=false
+                                        humanEmail_edit.isEnabled=false
+                                        humanNotes_edit.isEnabled=false
+                                        yes_to_adjust_button.visibility=View.GONE
+                                        no_to_adjust_button.visibility=View.GONE
                                         popupWindow.dismiss()//关闭弹窗
                                     }
-                                    no_to_adjust_button.setOnClickListener { popupWindow.dismiss() }
+                                    no_to_adjust_button.setOnClickListener {
+                                        humanName_edit.isEnabled=false
+                                        humanGender_edit.isEnabled=false
+                                        humanPhone_edit.isEnabled=false
+                                        humanEmail_edit.isEnabled=false
+                                        humanNotes_edit.isEnabled=false
+                                        yes_to_adjust_button.visibility=View.GONE
+                                        no_to_adjust_button.visibility=View.GONE
+                                        popupWindow.dismiss() }
                                     true
                                 }
                                 // 处理删除的点击事件
@@ -219,9 +365,14 @@ import kotlin.math.sqrt
                                         .setCancelable(false)
                                         .setPositiveButton("确认") { dialog, which ->
                                             // 点击确认按钮，执行删除操作
-                                            db.delete("Person","personId=?", arrayOf("$id"))
-                                            refresh()
-                                            popupWindow.dismiss()
+                                            GlobalScope.launch {
+                                                val job1 = async { deleteRelation(temp_relation.personId) }
+                                                job1.await()
+                                                withContext(Dispatchers.Main) {
+                                                    onResume()
+                                                    popupWindow.dismiss()
+                                                }
+                                            }
                                         }
                                         .setNegativeButton("取消") { dialog, which ->
                                             // 点击取消按钮，不执行任何操作
@@ -238,11 +389,36 @@ import kotlin.math.sqrt
                         popupMenu.show() // 显示操作菜单
                     }
                 }
-            } while (cursor.moveToNext())
+            }
         }
+
         //绘制关系图
         createGraph(userSuperTextView,connectionsList, relativeHumanLayout, relativeLineLayout)
-        cursor.close()
+    }
+
+    suspend fun deleteRelation(personId:Int):Boolean{
+        val jsonString = MySQLConnection.fetchWebpageContent("DeleteRelation",personId.toString(),"")
+        try {
+            // 解析 JSON 字符串为 JSON 对象
+            val jsonObject = JSONObject(jsonString)
+        }catch(e: JSONException){
+            // 如果转换失败，则处理异常，例如输出错误信息或者提示用户输入有效的 JSON 字符串
+            withContext(Dispatchers.Main) {
+                Toast.makeText(ConnectionsManagementApplication.context, "网络错误", Toast.LENGTH_SHORT).show()
+            }
+            return false
+        }
+        return withContext(Dispatchers.Main) {
+            //相应结果为success
+            if(JSONObject(jsonString).getString("result")=="success"){
+                ConnectionsManagementApplication.IsRelationsChanged=true
+                Toast.makeText(ConnectionsManagementApplication.context, "删除成功", Toast.LENGTH_SHORT).show()
+                return@withContext true
+            }else{
+                Toast.makeText(ConnectionsManagementApplication.context, "删除失败", Toast.LENGTH_SHORT).show()
+                return@withContext false
+            }
+        }
     }
 
     //人脉关系图绘制 备注：目前已实现人物围绕中心绕圈分布，重叠时圆圈自动外扩，展现一圈圈的人脉关系图

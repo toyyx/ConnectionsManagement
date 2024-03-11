@@ -4,6 +4,7 @@
         android:title="menu_calendar"
         android:icon="@mipmap/ic_result_menu"/>
     <item
+        android:id="@+id/main_menu_item"
         android:title="menu_add"
         android:icon="@mipmap/plus_sign"/>
     <item

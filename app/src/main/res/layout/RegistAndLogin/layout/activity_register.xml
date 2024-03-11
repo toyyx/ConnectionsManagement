@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="头像："/>
+                android:text="头           像："/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/tv_registeractivity_userimage"
                 android:layout_width="0dp"
@@ -71,7 +71,7 @@
                 android:id="@+id/tv_registeractivity_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户名："/>
+                android:text="用  户  名："/>
             <EditText
                 android:id="@+id/et_registeractivity_username"
                 android:layout_width="match_parent"
@@ -82,44 +82,134 @@
                 />
         </LinearLayout>
 <!-- 第二个文本编辑框  输入密码 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_registeractivity_password1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="密    码："/>
-        <EditText
-            android:id="@+id/et_registeractivity_password1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:inputType="textPassword"
-            android:hint="请输入密码" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_password1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密        码："/>
+            <EditText
+                android:id="@+id/et_registeractivity_password1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:inputType="textPassword"
+                android:hint="请输入密码" />
+        </LinearLayout>
 <!-- 第三个文本编辑框  再次输入密码 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_registeractivity_password2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="密    码："/>
-        <EditText
-            android:id="@+id/et_registeractivity_password2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="请再次输入密码"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:inputType="textPassword"
-            />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_password2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密        码："/>
+            <EditText
+                android:id="@+id/et_registeractivity_password2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="请再次输入密码"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:inputType="textPassword"
+                />
+        </LinearLayout>
+        <!-- 第四个文本编辑框  再次输入姓名 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="姓        名："/>
+            <EditText
+                android:id="@+id/et_registeractivity_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="请输入姓名"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                />
+        </LinearLayout>
+        <!-- 第五个文本编辑框  再次输入性别 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="性        别："/>
+            <RadioGroup
+                android:id="@+id/rg_registeractivity_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/gender_man_waitforupdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="男"/>
+                <RadioButton
+                    android:id="@+id/gender_woman_waitforupdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="女"/>
+            </RadioGroup>
+        </LinearLayout>
+        <!-- 第六个文本编辑框  再次输入电话号码 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_phonenumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电话号码："/>
+            <EditText
+                android:id="@+id/et_registeractivity_phonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="请输入电话号码"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                />
+        </LinearLayout>
+        <!-- 第七个文本编辑框  再次输入邮箱 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_registeractivity_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="邮        箱："/>
+            <EditText
+                android:id="@+id/et_registeractivity_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="请输入邮箱"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                />
+        </LinearLayout>
+
 <!-- 验证码部分 -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -136,7 +226,7 @@
                     android:id="@+id/tv_registeractivity_phoneCodes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="验证码："/>
+                    android:text="验  证  码："/>
                 <EditText
                     android:id="@+id/et_registeractivity_phoneCodes"
                     android:layout_width="0dp"
@@ -177,6 +267,7 @@
             android:layout_marginTop="10dp"
             >
             <TextView
+                android:id="@+id/testtext"
                 android:layout_centerInParent="true"
                 android:text="注册即代表同意《用户协议》"
                 android:layout_width="wrap_content"

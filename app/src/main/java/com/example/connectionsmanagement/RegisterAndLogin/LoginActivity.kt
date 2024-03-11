@@ -13,10 +13,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
+import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.downloadImage
+import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getSpecialFromString
 import com.example.connectionsmanagement.ConnectionsMap.MainActivity
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.ConnectionsMap.ResultActivity
+import com.example.connectionsmanagement.MysqlServer.MySQLConnection
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.URL
+import java.time.LocalDateTime
 
 /**
  * 此类 implements View.OnClickListener 之后，
@@ -37,6 +50,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private var mEtLoginactivityPassword: EditText? = null
     private var mLlLoginactivityTwo: LinearLayout? = null
     private var mBtLoginactivityLogin: Button? = null
+    private var testDBButton: Button? = null
+
 
     /**
      * 创建 Activity 时先来重写 onCreate() 方法
@@ -57,6 +72,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         // 设置点击事件监听器
         mBtLoginactivityLogin?.setOnClickListener(this)
         mTvLoginactivityRegister?.setOnClickListener(this)
+        testDBButton?.setOnClickListener(this)
     }
 
     /**
@@ -72,12 +88,32 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
          mEtLoginactivityUsername = findViewById<EditText>(R.id.et_loginactivity_username)
          mEtLoginactivityPassword = findViewById<EditText>(R.id.et_loginactivity_password)
          mLlLoginactivityTwo = findViewById<LinearLayout>(R.id.ll_loginactivity_two)
-
+         //testDBButton=findViewById<Button>(R.id.testDB_login)
 
     }
 
     override fun onClick(view: View) {
         when (view.id) {
+            R.id.testDB_image_download ->{
+//                GlobalScope.launch {
+//                    // 服务器上图片的存储路径
+//                    val serverImagePath = "http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/data_image/d5fb4303-3c35-46fe-8c86-457bf98f2c45.jpg"
+//                    // 本地保存图片的路径
+//                    val localImagePath = "${externalCacheDir}/human_image${LocalDateTime.now()}.jpg"
+//
+//                    // 下载图片
+//                    downloadImage(serverImagePath, localImagePath)
+//                }
+//                GlobalScope.launch {
+//                    val job1 = async { MySQLConnection.fetchWebpageContent("Login","test3","test3") }
+//                    // 等待所有协程执行完毕，并获取结果
+//                    val result1:String = job1.await()
+//                    withContext(Dispatchers.Main) {
+//                        Toast.makeText(ConnectionsManagementApplication.context, result1, Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+            }
+
             R.id.tv_loginactivity_register -> {
                 startActivity(Intent(this, RegisterActivity::class.java))
                 finish()
@@ -88,33 +124,43 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(ConnectionsManagementApplication.context,"输入用户${name}",Toast.LENGTH_SHORT).show();
                 val password = mEtLoginactivityPassword?.text.toString().trim { it <= ' ' }
                 if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(password)) {
-                    val data = mDBOpenHelper!!.allData
-                    var match = false
-                    var i = 0
-                    while (i < data.size) {
-                        val user = data[i]
-                        if (name == user.name && password == user.password) {
-                            match = true
-                            ConnectionsManagementApplication.NowUserId=user.id //获取登录用户ID
-                            break
-                        } else {
-                            match = false
+                    GlobalScope.launch {
+                        val job = async { MySQLConnection.fetchWebpageContent("Login",name,password) }
+                        // 等待所有协程执行完毕，并获取结果
+                        val jsonString:String = job.await()
+                        // 解析 JSON 字符串为 JSON 对象
+                        val jsonObject = JSONObject(jsonString)
+                        withContext(Dispatchers.Main) {
+                            //相应结果为success
+                            if(jsonObject.getString("result")=="success"){
+                                Toast.makeText(ConnectionsManagementApplication.context, "登录成功", Toast.LENGTH_SHORT).show()
+                                ConnectionsManagementApplication.NowUser=User(jsonObject.getString("userId").toInt(),
+                                    jsonObject.getString("userName"),
+                                    jsonObject.getString("password"),
+                                    jsonObject.getString("name"),
+                                    jsonObject.getString("gender"),
+                                    jsonObject.getString("image_path"),
+                                    jsonObject.getString("phone_number"),
+                                    jsonObject.getString("email"))
+                                downloadImage(ConnectionsManagementApplication.context,ConnectionsManagementApplication.NowUser.image_path)
+                                //进入主页面
+                                val intent = Intent(ConnectionsManagementApplication.context, MainActivity::class.java)
+                                startActivity(intent)
+                                finish() //销毁此Activity
+                            }else{
+                                Toast.makeText(ConnectionsManagementApplication.context, "登录失败", Toast.LENGTH_SHORT).show()
+                            }
                         }
-                        i++
                     }
-                    if (match) {
-                        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish() //销毁此Activity
-                    } else {
-                        Toast.makeText(this, "用户名或密码不正确，请重新输入", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                } else {
-                    Toast.makeText(this, "请输入你的用户名或密码", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this, "用户名和密码不可为空", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
+
+
+
 }
+

@@ -4,8 +4,17 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.provider.MediaStore
 
-
+//释放bitmap内存
+fun releaseBitmap(bitmap: Bitmap?) {
+    bitmap?.let {
+        if (!it.isRecycled) {
+            it.recycle()
+        }
+    }
+}
 fun Any.pxToDp(px: Int): Int {
         val density = ConnectionsManagementApplication.context.resources.displayMetrics.density
         return (px / density).toInt()
@@ -14,6 +23,15 @@ fun Any.pxToDp(px: Int): Int {
 fun dpToPx(dp: Int): Float {
     return dp * ConnectionsManagementApplication.context.resources.displayMetrics.density
 }
+
+//fun getRealPathFromURI(uri: Uri?): String {
+//    val cursor = contentResolver.query(uri!!, null, null, null, null)
+//    cursor!!.moveToFirst()
+//    val columnIndex = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+//    val imagePath = cursor.getString(columnIndex)
+//    cursor.close()
+//    return imagePath
+//}
 
 //bitmap变为Drawable
 fun Any.bitmapToDrawable(bitmap: Bitmap?, width: Int, height: Int): Drawable? {
