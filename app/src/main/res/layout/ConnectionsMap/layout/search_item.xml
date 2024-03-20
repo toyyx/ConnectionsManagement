@@ -2,37 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp"
-    android:layout_marginLeft="10dp">
-    <LinearLayout
+    android:orientation="horizontal">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/searchImage"
         android:layout_width="60dp"
-        android:layout_height="60dp">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/searchImage"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:src="@mipmap/plus_sign"/>
-    </LinearLayout>
-    <LinearLayout
+        android:layout_height="60dp"
+        android:src="@mipmap/plus_sign"/>
+    <TextView
+        android:id="@+id/searchName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/searchName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="人物名字"
-            android:textSize="25dp"/>
-        <TextView
-            android:id="@+id/searchNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="人物备注"
-            android:textSize="20dp"/>
-    </LinearLayout>
-
+        android:gravity="start|center"
+        android:text="人物名字"
+        android:textSize="25dp"/>
+    <CheckBox
+        android:id="@+id/searchSelect"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"/>
 </LinearLayout>

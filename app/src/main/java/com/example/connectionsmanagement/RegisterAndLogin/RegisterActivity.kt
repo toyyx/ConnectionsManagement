@@ -20,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
-import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
 import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getFileFromURI
 import com.example.connectionsmanagement.R
@@ -42,7 +41,6 @@ import java.util.Locale
  */
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private var realCode: String? = null
-    var mDBOpenHelper: ConnectionsDatabaseHelper? = null
     private var mBtRegisteractivityRegister: Button? = null
     private var mRlRegisteractivityTop: RelativeLayout? = null
     private var mIvRegisteractivityBack: ImageView? = null
@@ -68,7 +66,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         initView()
-        mDBOpenHelper = ConnectionsDatabaseHelper(this,1)
 
         //性别单选处理
         val radioGroup = findViewById<RadioGroup>(R.id.rg_registeractivity_gender)

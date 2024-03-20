@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent_dark">
-<RelativeLayout
+<LinearLayout
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
+    android:orientation="vertical"
     android:background="@drawable/pop_add_human_border">
     <TextView
         android:id="@+id/addTitle"
@@ -39,6 +40,7 @@
             android:layout_gravity="center"
             android:src="@mipmap/plus_sign"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/addNameLinearLayout"
         android:layout_width="match_parent"
@@ -62,6 +64,25 @@
             android:hint="7字以内"
             android:maxLength="7"
             android:singleLine="true"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/addRelationLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/addGenderLinearLayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="关系："
+            android:textColor="#000000"/>
+        <Spinner
+            android:id="@+id/addRelationSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/addGenderLinearLayout"
@@ -93,25 +114,7 @@
                 android:text="女"/>
         </RadioGroup>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/addRelationLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/addGenderLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="关系："
-            android:textColor="#000000"/>
-        <Spinner
-            android:id="@+id/addRelationSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/addPhoneLinearLayout"
         android:layout_width="match_parent"
@@ -207,5 +210,5 @@
             android:backgroundTint="#3E4A48" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
 </RelativeLayout>

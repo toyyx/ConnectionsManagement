@@ -61,6 +61,6 @@ dependencies {
     implementation 'mysql:mysql-connector-java:5.1.49'
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation 'com.google.code.gson:gson:2.8.8'
-    implementation 'com.prolificinteractive:material-calendarview:2.0.0'
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
 }
 

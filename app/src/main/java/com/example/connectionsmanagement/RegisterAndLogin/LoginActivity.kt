@@ -1,35 +1,30 @@
 package com.example.connectionsmanagement.RegisterAndLogin
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.connectionsmanagement.ConnectionsMap.ConnectionsDatabaseHelper
 import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
 import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.downloadImage
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getSpecialFromString
 import com.example.connectionsmanagement.ConnectionsMap.MainActivity
-import com.example.connectionsmanagement.R
-import com.example.connectionsmanagement.ConnectionsMap.ResultActivity
 import com.example.connectionsmanagement.MysqlServer.MySQLConnection
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.connectionsmanagement.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.URL
-import java.time.LocalDateTime
 
 /**
  * 此类 implements View.OnClickListener 之后，
@@ -43,7 +38,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      * 创建数据表
      * 然后再进行数据表的增、删、改、查操作
      */
-    private var mDBOpenHelper: ConnectionsDatabaseHelper? = null
     private var mTvLoginactivityRegister: TextView? = null
     private var mRlLoginactivityTop: RelativeLayout? = null
     private var mEtLoginactivityUsername: EditText? = null
@@ -64,15 +58,16 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      * 实例化 DBOpenHelper，待会进行登录验证的时候要用来进行数据查询
      * mDBOpenHelper = new DBOpenHelper(this);
      */
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initView()
-        mDBOpenHelper = ConnectionsDatabaseHelper(this,1)
         // 设置点击事件监听器
         mBtLoginactivityLogin?.setOnClickListener(this)
         mTvLoginactivityRegister?.setOnClickListener(this)
         testDBButton?.setOnClickListener(this)
+
     }
 
     /**
@@ -90,29 +85,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
          mLlLoginactivityTwo = findViewById<LinearLayout>(R.id.ll_loginactivity_two)
          //testDBButton=findViewById<Button>(R.id.testDB_login)
 
+
     }
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.testDB_image_download ->{
-//                GlobalScope.launch {
-//                    // 服务器上图片的存储路径
-//                    val serverImagePath = "http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/data_image/d5fb4303-3c35-46fe-8c86-457bf98f2c45.jpg"
-//                    // 本地保存图片的路径
-//                    val localImagePath = "${externalCacheDir}/human_image${LocalDateTime.now()}.jpg"
-//
-//                    // 下载图片
-//                    downloadImage(serverImagePath, localImagePath)
-//                }
-//                GlobalScope.launch {
-//                    val job1 = async { MySQLConnection.fetchWebpageContent("Login","test3","test3") }
-//                    // 等待所有协程执行完毕，并获取结果
-//                    val result1:String = job1.await()
-//                    withContext(Dispatchers.Main) {
-//                        Toast.makeText(ConnectionsManagementApplication.context, result1, Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-            }
 
             R.id.tv_loginactivity_register -> {
                 startActivity(Intent(this, RegisterActivity::class.java))
@@ -125,29 +102,33 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val password = mEtLoginactivityPassword?.text.toString().trim { it <= ' ' }
                 if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(password)) {
                     GlobalScope.launch {
-                        val job = async { MySQLConnection.fetchWebpageContent("Login",name,password) }
+                        val job1 = async { MySQLConnection.fetchWebpageContent("Login",name,password) }
                         // 等待所有协程执行完毕，并获取结果
-                        val jsonString:String = job.await()
+                        val jsonString:String = job1.await()
+                        println("Server Response: $jsonString")
                         // 解析 JSON 字符串为 JSON 对象
                         val jsonObject = JSONObject(jsonString)
-                        withContext(Dispatchers.Main) {
-                            //相应结果为success
-                            if(jsonObject.getString("result")=="success"){
+                        if(jsonObject.getString("result")=="success"){
+                            ConnectionsManagementApplication.NowUser=User(jsonObject.getString("userId").toInt(),
+                                jsonObject.getString("userName"),
+                                jsonObject.getString("password"),
+                                jsonObject.getString("name"),
+                                jsonObject.getString("gender"),
+                                jsonObject.getString("image_path"),
+                                jsonObject.getString("phone_number"),
+                                jsonObject.getString("email"))
+                            val job = async {  downloadImage(ConnectionsManagementApplication.context,ConnectionsManagementApplication.NowUser.image_path) }
+                            // 等待所有协程执行完毕，并获取结果
+                            job.await()
+                            withContext(Dispatchers.Main) {
                                 Toast.makeText(ConnectionsManagementApplication.context, "登录成功", Toast.LENGTH_SHORT).show()
-                                ConnectionsManagementApplication.NowUser=User(jsonObject.getString("userId").toInt(),
-                                    jsonObject.getString("userName"),
-                                    jsonObject.getString("password"),
-                                    jsonObject.getString("name"),
-                                    jsonObject.getString("gender"),
-                                    jsonObject.getString("image_path"),
-                                    jsonObject.getString("phone_number"),
-                                    jsonObject.getString("email"))
-                                downloadImage(ConnectionsManagementApplication.context,ConnectionsManagementApplication.NowUser.image_path)
                                 //进入主页面
                                 val intent = Intent(ConnectionsManagementApplication.context, MainActivity::class.java)
                                 startActivity(intent)
                                 finish() //销毁此Activity
-                            }else{
+                            }
+                        }else {
+                            withContext(Dispatchers.Main) {
                                 Toast.makeText(ConnectionsManagementApplication.context, "登录失败", Toast.LENGTH_SHORT).show()
                             }
                         }

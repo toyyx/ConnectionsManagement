@@ -1,7 +1,6 @@
 package com.example.connectionsmanagement.ConnectionsMap
 //为配合drawer设置的Fragment，具体实现在ResultActivity
-import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,23 +12,22 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.contentValuesOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getBitmapFromLocalPath
 import com.example.connectionsmanagement.MysqlServer.MySQLConnection
-import com.example.connectionsmanagement.MysqlServer.Relation
 import com.example.connectionsmanagement.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -40,11 +38,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -65,13 +61,12 @@ class DrawerFragment : Fragment() {
     val popupLayout = LayoutInflater.from(ConnectionsManagementApplication.context).inflate(R.layout.pop_human_detail, null)
     //获取浏览、编辑状态的控件
     val humanImage = popupLayout.findViewById<CircleImageView>(R.id.popImage)
-    val humanName_edit = popupLayout.findViewById<EditText>(R.id.popNameEditText)
-    val humanGender_edit = popupLayout.findViewById<EditText>(R.id.popGenderEditText)
-    val humanPhone_edit = popupLayout.findViewById<EditText>(R.id.popPhoneEditText)
-    val humanEmail_edit = popupLayout.findViewById<EditText>(R.id.popEmailEditText)
-    val humanNotes_edit = popupLayout.findViewById<EditText>(R.id.popNotesEditText)
-    val yes_to_adjust_button=popupLayout.findViewById<Button>(R.id.YesToAdjust)
-    val no_to_adjust_button=popupLayout.findViewById<Button>(R.id.NoToAdjust)
+    val humanName_TV = popupLayout.findViewById<TextView>(R.id.popName_TextView)
+    val humanRelation_TV = popupLayout.findViewById<TextView>(R.id.popRelation_TextView)
+    val humanGender_TV = popupLayout.findViewById<TextView>(R.id.popGender_TextView)
+    val humanPhone_TV = popupLayout.findViewById<TextView>(R.id.popPhone_TextView)
+    val humanEmail_TV = popupLayout.findViewById<TextView>(R.id.popEmail_TextView)
+    val humanNotes_TV = popupLayout.findViewById<TextView>(R.id.popNotes_TextView)
 
     //设置平移与缩放所需变量
     lateinit var gestureDetector: GestureDetector
@@ -83,7 +78,6 @@ class DrawerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreate", Toast.LENGTH_SHORT).show()
-
     }
 
     override fun onStart() {
@@ -94,7 +88,7 @@ class DrawerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onResume", Toast.LENGTH_SHORT).show()
-        if(ConnectionsManagementApplication.IsRelationsChanged==true) {
+        if(ConnectionsManagementApplication.IsRelationsChanged) {
             ConnectionsManagementApplication.IsRelationsChanged=false
             GlobalScope.launch {
                 val job=async {ImageDownloader.RefreshRelations()}
@@ -256,11 +250,12 @@ class DrawerFragment : Fragment() {
                 mySuperTextView.setOnClickListener {
                     //将查询到的人物信息显示出来
                     humanImage.setImageBitmap(getBitmapFromLocalPath(temp_relation.image_path))
-                    humanName_edit.setText(temp_relation.name)
-                    humanGender_edit.setText(temp_relation.gender)
-                    humanPhone_edit.setText(temp_relation.phone_number)
-                    humanEmail_edit.setText(temp_relation.email)
-                    humanNotes_edit.setText(temp_relation.notes)
+                    humanName_TV.text=temp_relation.name
+                    humanRelation_TV.text=temp_relation.relationship
+                    humanGender_TV.text=temp_relation.gender
+                    humanPhone_TV.text=temp_relation.phone_number
+                    humanEmail_TV.text=temp_relation.email
+                    humanNotes_TV.text=temp_relation.notes
 
                     // 创建人物详情弹窗
                     val popupWindow = PopupWindow(popupLayout, dpToPx(200).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT, true)
@@ -277,83 +272,10 @@ class DrawerFragment : Fragment() {
                             when (item.itemId) {
                                 // 处理修改的点击事件
                                 R.id.menu_adjust -> {
-                                    //切换显示控件（转化为可编辑控件）
-                                    humanName_edit.isEnabled=true
-                                    humanGender_edit.isEnabled=true
-                                    humanPhone_edit.isEnabled=true
-                                    humanEmail_edit.isEnabled=true
-                                    humanNotes_edit.isEnabled=true
-                                    yes_to_adjust_button.visibility=View.VISIBLE
-                                    no_to_adjust_button.visibility=View.VISIBLE
-                                    //确定修改人物信息
-                                    yes_to_adjust_button.setOnClickListener {
-                                        // 创建OkHttpClient实例
-                                        val client = OkHttpClient()
-
-                                        // 构建MultipartBody，用于上传图片
-                                        val requestBody = MultipartBody.Builder()
-                                            .setType(MultipartBody.FORM)
-                                            .addFormDataPart("personId",temp_relation.personId.toString())
-                                            .addFormDataPart("name",humanName_edit.text.toString())
-                                            .addFormDataPart("gender",humanGender_edit.text.toString())
-                                            .addFormDataPart("phone_number",humanPhone_edit.text.toString())
-                                            .addFormDataPart("email",humanEmail_edit.text.toString())
-                                            .addFormDataPart("notes",humanNotes_edit.text.toString())
-                                            .build()
-
-                                        // 创建POST请求
-                                        val request = Request.Builder()
-                                            .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/UpdateRelationServlet")
-                                            .post(requestBody)
-                                            .build()
-
-                                        // 发送请求并处理响应
-                                        client.newCall(request).enqueue(object : Callback {
-                                            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                                                // 处理服务器响应，根据需要更新UI或执行其他操作
-                                                val responseBody =  response.body?.string()//JsonString
-                                                if (responseBody != null) {
-                                                    // 处理服务器响应内容，这里的 responseBody 就是网页内容
-                                                    // 可以在这里对网页内容进行解析、处理等操作
-                                                    println("Server Response: $responseBody")
-                                                    activity?.runOnUiThread {
-                                                        // 将JSON字符串解析为JsonObject
-                                                        val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
-                                                        // 读取特定键的值
-                                                        if(jsonObject["result"].asString=="success"){
-                                                            Toast.makeText(ConnectionsManagementApplication.context,"修改关系成功",Toast.LENGTH_SHORT).show()
-                                                            ConnectionsManagementApplication.IsRelationsChanged=true
-                                                        }else{
-                                                            Toast.makeText(ConnectionsManagementApplication.context,"修改关系失败",Toast.LENGTH_SHORT).show()
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                                                activity?.runOnUiThread {
-                                                    // 处理请求失败情况，例如网络连接问题
-                                                    Toast.makeText(ConnectionsManagementApplication.context, "网络连接失败", Toast.LENGTH_SHORT).show()
-                                                }
-                                            }
-                                        })
-                                        humanName_edit.isEnabled=false
-                                        humanGender_edit.isEnabled=false
-                                        humanPhone_edit.isEnabled=false
-                                        humanEmail_edit.isEnabled=false
-                                        humanNotes_edit.isEnabled=false
-                                        yes_to_adjust_button.visibility=View.GONE
-                                        no_to_adjust_button.visibility=View.GONE
-                                        popupWindow.dismiss()//关闭弹窗
-                                    }
-                                    no_to_adjust_button.setOnClickListener {
-                                        humanName_edit.isEnabled=false
-                                        humanGender_edit.isEnabled=false
-                                        humanPhone_edit.isEnabled=false
-                                        humanEmail_edit.isEnabled=false
-                                        humanNotes_edit.isEnabled=false
-                                        yes_to_adjust_button.visibility=View.GONE
-                                        no_to_adjust_button.visibility=View.GONE
-                                        popupWindow.dismiss() }
+                                    val intent = Intent(context, EditRelationActivity::class.java)
+                                    intent.putExtra("thisRelation", Gson().toJson(temp_relation))
+                                    context?.startActivity(intent)
+                                    popupWindow.dismiss()
                                     true
                                 }
                                 // 处理删除的点击事件

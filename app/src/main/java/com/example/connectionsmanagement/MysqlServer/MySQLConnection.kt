@@ -29,6 +29,8 @@ import java.sql.SQLException
                          "Login"->{URL(urlBasic+"LoginServlet?userName=${param1}&password=${param2}").readText()}
                          "SearchRelations"->{URL(urlBasic+"SearchRelationsServlet?userId=${param1}").readText()}
                          "DeleteRelation"->{URL(urlBasic+"DeleteRelationServlet?personId=${param1}").readText()}
+                         "SearchCommunications"->{URL(urlBasic+"SearchCommunicationsServlet?userId=${param1}").readText()}
+                         "DeleteCommunication"->{URL(urlBasic+"DeleteCommunicationServlet?eventId=${param1}").readText()}
                          else -> {""}
                      }
                  }
