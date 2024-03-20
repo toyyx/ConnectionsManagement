@@ -54,6 +54,7 @@ class EditRelationActivity : AppCompatActivity() {
         val back_IV=findViewById<ImageView>(R.id.back_editRelation_ImageView)
 
         //设置初始值
+        imageUri= ImageDownloader.getUriFromLocalPath(thisRelation.image_path)
         image_CIV.setImageBitmap(ImageDownloader.getBitmapFromLocalPath(thisRelation.image_path))
         name_ET.setText(thisRelation.name)
         phone_ET.setText(thisRelation.phone_number)

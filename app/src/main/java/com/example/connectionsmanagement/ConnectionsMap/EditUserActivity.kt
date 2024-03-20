@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
+import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getUriFromLocalPath
 import com.example.connectionsmanagement.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -45,6 +46,7 @@ class EditUserActivity : AppCompatActivity() {
         val back_IV=findViewById<ImageView>(R.id.back_editUser_ImageView)
 
         val user=ConnectionsManagementApplication.NowUser
+        imageUri=getUriFromLocalPath(user.image_path!!)
         image_CIV.setImageBitmap(ImageDownloader.getBitmapFromLocalPath(user.image_path!!))
         userName_ET.setText(user.userName)
         name_ET.setText(user.name)

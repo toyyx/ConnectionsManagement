@@ -104,9 +104,6 @@ class SearchParticipantsActivity : AppCompatActivity() , SearchResultAdapter.OnC
                         added=false
                     }
                 }
-//                searchResults.forEach {
-//                    Toast.makeText(ConnectionsManagementApplication.context, "${it.name} ${it.selected}", Toast.LENGTH_SHORT).show()
-//                }
                 adapter.notifyDataSetChanged()//通知数据变化
             }
 

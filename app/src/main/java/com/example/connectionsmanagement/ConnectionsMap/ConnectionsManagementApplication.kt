@@ -80,6 +80,11 @@ object ImageDownloader {
         return BitmapFactory.decodeFile(ConnectionsManagementApplication.context.externalCacheDir.toString()+ImageDownloader.getSpecialFromString(localPath, "data_image/"))
     }
 
+    fun getUriFromLocalPath(localPath :String):Uri{
+        val imagePath = ConnectionsManagementApplication.context.externalCacheDir.toString()+getSpecialFromString(localPath, "data_image/")
+        return Uri.fromFile(File(imagePath))
+    }
+
     //从字符串中获取特定字符串的后面部分
     fun getSpecialFromString(string: String,character: String):String{
         return string.substring(string.indexOf(character) + character.length)

@@ -2,10 +2,13 @@ package com.example.connectionsmanagement.ConnectionsMap
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,13 +33,13 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ListFragment : Fragment() {
+class ListFragment : Fragment() , CardPersonAdapter.onDeleteButtonClickListener{
     // TODO: Rename and change types of parameters
     lateinit var thisView:View
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CardPersonAdapter
-    var cardResults = arrayListOf<CardPerson>()//搜索结果队列
-    lateinit var newCardResults: ArrayList<CardPerson>
+    var cardResults = arrayListOf<Relation>()//搜索结果队列
+    lateinit var newCardResults: ArrayList<Relation>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +76,7 @@ class ListFragment : Fragment() {
         recyclerView = thisView.findViewById<RecyclerView>(R.id.cardRecyclerView_ListFragment)
         recyclerView.layoutManager = LinearLayoutManager(ConnectionsManagementApplication.context)
 
-        adapter = CardPersonAdapter(cardResults)
+        adapter = CardPersonAdapter(requireContext(),cardResults,this)
         recyclerView.adapter = adapter
 
         //获取人际关系列表
@@ -88,28 +91,42 @@ class ListFragment : Fragment() {
                 adapter.notifyDataSetChanged()//通知数据变化
             }
         }
+
+        //监听搜索框
+        thisView.findViewById<EditText>(R.id.SearchParticipant_List_EditText).addTextChangedListener(object :
+            TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                // 在文本改变之前执行的操作，用于限制输入内容
+                // charSequence 包含了当前文本内容和即将输入的字符
+            }
+            //实时搜索
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                cardResults.clear()//清空搜索结果队列
+                // 在文本改变过程中实时触发的操作,charSequence包含了当前文本内容和正在输入的字符
+                val input=charSequence.toString()//获取输入内容
+                ConnectionsManagementApplication.NowRelations.forEach {
+                    if(it.name.contains(input)){
+                        cardResults.add(it)//加入搜索结果队列
+                    }
+                }
+                adapter.notifyDataSetChanged()//通知数据变化
+            }
+
+            override fun afterTextChanged(editable: Editable) {
+                // 在文本改变完成后执行的操作
+                // editable 包含了最终的文本内容
+            }
+        })
         return thisView
     }
 
-    private suspend fun RefreshcardResults(): ArrayList<CardPerson>{
+    private suspend fun RefreshcardResults(): ArrayList<Relation>{
         ImageDownloader.RefreshRelations()
-        var cardResults= arrayListOf<CardPerson>()
-        //下载图片
-        ConnectionsManagementApplication.NowRelations.forEach {
-            //ImageDownloader.downloadImage(ConnectionsManagementApplication.context, it.image_path)
-            val bitmap= BitmapFactory.decodeFile(ConnectionsManagementApplication.context.externalCacheDir.toString()+ImageDownloader.getSpecialFromString(it.image_path, "data_image/"))
-            // 判断是否成功解码
-            if (bitmap == null) {
-                // 解码失败
-                println("Failed to decode bitmap from file")
-            } else {
-                // 解码成功
-                println("Bitmap decoded successfully from file")
-            }
-            val myCardPerson=CardPerson(bitmap,it.name,it.relationship,it.phone_number,it.notes)
-            cardResults.add(myCardPerson)//加入搜索结果队列
-        }
-        return cardResults
+        return ConnectionsManagementApplication.NowRelations
+    }
+
+    override fun onDeleteButtonClick() {
+        onResume()
     }
 
     companion object {

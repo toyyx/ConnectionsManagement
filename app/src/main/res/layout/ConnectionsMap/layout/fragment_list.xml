@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConnectionsMap.ListFragment">
+    tools:context=".ConnectionsMap.ListFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- 搜索框 -->
+    <EditText
+        android:id="@+id/SearchParticipant_List_EditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="输入关键字进行搜索"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_button_background"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardRecyclerView_ListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-</FrameLayout>
+</LinearLayout>
