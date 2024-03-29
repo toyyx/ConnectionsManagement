@@ -3,15 +3,15 @@
     <item
         android:id="@+id/main_menu_calendar"
         android:title="menu_calendar"
-        android:icon="@mipmap/ic_result_menu"/>
+        android:icon="@drawable/calender"/>
     <item
         android:id="@+id/main_menu_item"
         android:title="menu_add"
-        android:icon="@mipmap/plus_sign"/>
+        android:icon="@drawable/home" />
     <item
         android:id="@+id/back_to_main"
         android:title="back_menu"
-        android:icon="@mipmap/ic_result_menu"
+        android:icon="@drawable/home"
         android:visible="false"/>
     <item
         android:title="menu_other"

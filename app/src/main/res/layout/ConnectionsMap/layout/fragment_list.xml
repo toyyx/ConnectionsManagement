@@ -11,11 +11,12 @@
         android:id="@+id/SearchParticipant_List_EditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="输入关键字进行搜索"
+        android:alpha="0.5"
+        android:hint=" 输入关键字进行搜索"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:layout_margin="16dp"
-        android:background="@drawable/rounded_button_background"/>
+        android:background="@drawable/communicate_rec"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardRecyclerView_ListFragment"
         android:layout_width="match_parent"

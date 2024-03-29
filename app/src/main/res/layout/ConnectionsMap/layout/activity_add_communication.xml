@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/grey"
     android:orientation="vertical">
     <View
         android:layout_width="match_parent"
@@ -14,11 +14,12 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/cancelCommunication_Button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/ic_result_menu"
-            android:backgroundTint="@color/white"
-            android:layout_gravity="start"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/icon_exitleft"
+            android:backgroundTint="@color/black"
+            android:layout_gravity="center"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,13 +27,13 @@
             android:text="添加交际"
             android:textSize="30dp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#3f8787"
             android:gravity="center"/>
         <Button
             android:id="@+id/sureAddCommunication_Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/plus_sign"
+            android:background="@drawable/upload"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"/>
     </LinearLayout>
@@ -51,15 +52,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际主题："
-                    android:textColor="#000000" />
+                android:background="@drawable/communicate_rec"
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/AddCommunicationTitle_EditText"
@@ -68,25 +62,17 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:gravity="start|center"
-                    android:hint="请输入内容"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:hint="交际主题"
                     android:singleLine="true" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际地址："
-                    android:textColor="#000000" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/grey">
+                </View>
                 <EditText
                     android:id="@+id/AddCommunicationAddress_EditText"
                     android:layout_width="match_parent"
@@ -94,9 +80,15 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:gravity="start|center"
-                    android:hint="请输入内容"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:hint="交际地址"
                     android:singleLine="true" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
@@ -105,14 +97,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
+                android:background="@drawable/communicate_rec"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="开始时间："
-                    android:textColor="#000000"/>
+                    android:textColor="#101010"/>
                 <TimePicker
                     android:id="@+id/AddCommunicationStartTime_TimePicker"
                     android:layout_width="wrap_content"
@@ -127,14 +119,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
+                android:background="@drawable/communicate_rec"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="结束时间："
-                    android:textColor="#000000"/>
+                    android:textColor="#101010"/>
                 <TimePicker
                     android:id="@+id/AddCommunicationFinishTime_TimePicker"
                     android:layout_width="wrap_content"
@@ -151,21 +143,15 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/rounded_button_background"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="参  与  者："
-                    android:textColor="#000000"/>
+
                 <EditText
                     android:id="@+id/AddCommunicationParticipants_EditText"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:gravity="start"
-                    android:hint="请选择参与人员"
-                    android:singleLine="true"
+                    android:background="@drawable/communicate_rec"
+                    android:hint="参与人员"
                     android:enabled="false"/>
                 <Button
                     android:id="@+id/selectParticipants_Button"
@@ -177,20 +163,14 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="5dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
+                android:background="@drawable/communicate_rec"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际内容："
-                    android:textColor="#000000"/>
                 <EditText
                     android:id="@+id/AddCommunicationDetail_EditText"
                     android:layout_width="0dp"
@@ -198,7 +178,7 @@
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:gravity="top|start"
-                    android:hint="请输入内容"
+                    android:hint="详细内容"
                     android:background="@null"
                     />
             </LinearLayout>

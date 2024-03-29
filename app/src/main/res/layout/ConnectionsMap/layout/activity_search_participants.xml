@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="end"
-    android:background="@color/white"
+    android:background="@color/grey"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,11 +11,11 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/backParticipant_Button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/ic_result_menu"
-            android:backgroundTint="@color/white"
-            android:layout_gravity="start"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/icon_exitleft"
+            android:layout_gravity="center"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -23,38 +23,40 @@
             android:text="添加参与者"
             android:textSize="30dp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#3f8787"
             android:gravity="center"/>
         <Button
             android:id="@+id/sureParticipant_Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/plus_sign"
+            android:background="@drawable/upload"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_button_background">
+        android:layout_margin="12dp"
+        android:background="@drawable/communicate_rec">
         <!-- 搜索框 -->
+        <!--添加搜索图标-->
         <EditText
             android:id="@+id/SearchParticipant_EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="输入关键字进行搜索"
+            android:hint=" 输入关键字进行搜索"
             android:imeOptions="actionSearch"
+            android:background="#fff"
             android:inputType="text"
-            android:layout_margin="16dp"/>
+            android:layout_marginTop="10dp"/>
         <!-- 搜索按钮 -->
         <Button
             android:id="@+id/buttonSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="搜索"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"/>
+            android:layout_gravity="center"/>
     </LinearLayout>
 
 

@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent_dark">
+    android:background="#c3d0d0">
 <LinearLayout
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:orientation="vertical"
-    android:background="@drawable/pop_add_human_border">
+    android:background="#f2f1f6">
     <TextView
         android:id="@+id/addTitle"
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         android:text="新增人物"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:textColor="#000000"
+        android:textColor="#3f8787"
         android:gravity="center"/>
     <LinearLayout
         android:id="@+id/addImageLinearLayout"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="头像："
-            android:textColor="#000000"/>
+            android:textColor="#a7a7a7"/>
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/addImage"
             android:layout_width="0dp"
@@ -49,28 +49,33 @@
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/addImageLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="姓名："
-            android:textColor="#000000"/>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:text="姓名："-->
+<!--            android:textColor="#000000"/>-->
         <EditText
             android:id="@+id/addNameText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:hint="7字以内"
+            android:layout_marginBottom="5dp"
+            android:hint="姓名"
+            android:textColorHint="#a7a7a7"
+            android:background="@drawable/communicate_rec"
             android:maxLength="7"
-            android:singleLine="true"/>
+            android:singleLine="true" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/addRelationLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:background="@drawable/communicate_rec"
         android:orientation="horizontal"
         android:layout_below="@+id/addGenderLinearLayout">
         <TextView
@@ -78,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="关系："
-            android:textColor="#000000"/>
+            android:textColor="#a7a7a7"/>
         <Spinner
             android:id="@+id/addRelationSpinner"
             android:layout_width="match_parent"
@@ -91,16 +96,17 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_below="@+id/addNameLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="性别："
-            android:textColor="#000000"/>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:text="性别："-->
+<!--            android:textColor="#000000"/>-->
         <RadioGroup
             android:id="@+id/gender_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/gender_man"
@@ -123,18 +129,16 @@
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/addRelationLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="电话："
-            android:textColor="#000000"/>
         <EditText
             android:id="@+id/addPhoneText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
+            android:background="@drawable/communicate_rec"
             android:layout_gravity="center_vertical"
+            android:hint="电话"
+            android:textColorHint="#a7a7a7"
             android:maxLength="11"/>
     </LinearLayout>
     <LinearLayout
@@ -145,18 +149,16 @@
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/addPhoneLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="邮箱："
-            android:textColor="#000000"/>
         <EditText
             android:id="@+id/addEmailText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
+            android:background="@drawable/communicate_rec"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center_vertical"
+            android:hint="邮箱"
+            android:textColorHint="#a7a7a7" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/addNotesLinearLayout"
@@ -166,19 +168,15 @@
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/addEmailLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="备注："
-            android:textColor="#000000"/>
         <EditText
             android:id="@+id/addNotesText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:hint="100字以内"
+            android:background="@drawable/communicate_rec"
+            android:hint="备注"
+            android:textColorHint="#a7a7a7"
             android:maxLength="100"
             android:maxLines="3"/>
     </LinearLayout>

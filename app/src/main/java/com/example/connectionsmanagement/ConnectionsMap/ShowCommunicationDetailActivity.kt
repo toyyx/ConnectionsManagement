@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
@@ -32,8 +33,8 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
     lateinit var FinishTime_TimePicker:TimePicker
     lateinit var Participants_EditText:EditText
     lateinit var Detail_EditText:EditText
-    lateinit var back_Button: Button
-    lateinit var edit_Button: Button
+    lateinit var back_Button: ImageButton
+    lateinit var edit_Button: ImageButton
     lateinit var sureEdit_Button: Button
     lateinit var SelectParticipants_Button: Button
     lateinit var thisCommunication: ShowCommunication

@@ -1,17 +1,24 @@
 package com.example.connectionsmanagement.ConnectionsMap
 
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.os.Bundle
-import android.provider.Settings.Global
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CalendarView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.RefreshCommunications
 import com.example.connectionsmanagement.R
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.DayViewDecorator
+import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,7 +35,7 @@ import kotlinx.coroutines.withContext
  * Use the [CalendarFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment(), DayViewDecorator {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +70,8 @@ class CalendarFragment : Fragment() {
 
         // 设置初始选中今天的日期
         calendarView.selectedDate = CalendarDay.today()
-
+        calendarView.invalidateDecorators()
+        calendarView.addDecorator(this)
         // 设置日期改变监听器
         calendarView.setOnDateChangedListener { widget, date, selected ->
             // 在这里处理日期改变事件
@@ -76,6 +84,29 @@ class CalendarFragment : Fragment() {
         }
 
         return thisView
+    }
+
+    override fun shouldDecorate(day: CalendarDay?): Boolean {
+        return true
+    }
+
+    override fun decorate(view: DayViewFacade?) {
+        if (view != null) {
+            val rectangleDrawable = ColorDrawable(Color.parseColor("#c3d0d0"))
+            val borderDrawable = ColorDrawable(Color.parseColor("#3f8787"))
+
+            val layers = arrayOf<Drawable>(rectangleDrawable, borderDrawable)
+            val layerDrawable = LayerDrawable(layers)
+
+            val borderWidth = 2.dpToPx()
+            layerDrawable.setLayerInset(1, borderWidth, borderWidth, borderWidth, borderWidth)
+
+            view.setBackgroundDrawable(layerDrawable)
+        }
+    }
+    fun Int.dpToPx(): Int {
+        val scale = Resources.getSystem().displayMetrics.density
+        return (this * scale + 0.5f).toInt()
     }
 
     companion object {

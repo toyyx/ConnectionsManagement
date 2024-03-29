@@ -3,16 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f2f1f6"
     android:orientation="vertical"
     tools:context=".ConnectionsMap.EditUserActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#f2f1f6">
         <ImageView
             android:id="@+id/back_editUser_ImageView"
-            android:layout_width="60dp"
+            android:layout_width="30dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_result_menu"/>
+            android:src="@drawable/exit_left_green"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -28,7 +31,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -45,14 +50,16 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -71,13 +78,15 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
@@ -97,13 +106,15 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
@@ -134,13 +145,15 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
@@ -160,13 +173,15 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/communicate_rec"
+        android:layout_margin="8dp"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
@@ -186,7 +201,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:background="@color/transparent_dark"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>

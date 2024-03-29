@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/grey"
     android:orientation="vertical">
     <View
         android:layout_width="match_parent"
@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <ImageButton
             android:id="@+id/backCommunicationDetail_Button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/ic_result_menu"
-            android:backgroundTint="@color/white"
+
+            android:layout_width="47dp"
+            android:layout_height="43dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/exit_left_green"
+            android:backgroundTint="#f2f1f6"
             android:layout_gravity="start"/>
         <TextView
             android:layout_width="0dp"
@@ -25,14 +27,16 @@
             android:text="交际详情"
             android:textSize="30dp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#3f8787"
             android:gravity="center"/>
-        <Button
+        <ImageButton
             android:id="@+id/editCommunication_Button"
-            android:layout_width="40dp"
+            android:layout_marginRight="9dp"
+            android:layout_width="38dp"
             android:layout_height="40dp"
-            android:background="@mipmap/plus_sign"
-            android:backgroundTint="@color/white"
+            android:src="@drawable/upload"
+            android:scaleType="center"
+            android:backgroundTint="#f2f1f6"
             android:layout_gravity="end"/>
         <Button
             android:id="@+id/sureEditCommunication_Button"
@@ -46,189 +50,199 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际主题："
-                    android:textColor="#000000" />
+                android:background="@drawable/communicate_rec"
+                android:orientation="vertical">
+
                 <EditText
                     android:id="@+id/DetailCommunicationTitle_EditText"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@null"
+                    android:enabled="false"
                     android:gravity="start|center"
                     android:hint="交际主题"
-                    android:singleLine="true"
-                    android:enabled="false"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际地址："
-                    android:textColor="#000000" />
+                    android:singleLine="true" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="#f2f1f6" />
+
                 <EditText
                     android:id="@+id/DetailCommunicationAddress_EditText"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@null"
+                    android:enabled="false"
                     android:gravity="start|center"
                     android:hint="交际地址"
-                    android:singleLine="true"
-                    android:enabled="false"/>
+                    android:singleLine="true" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="开始时间："
-                    android:textColor="#000000"/>
-                <TextView
-                    android:id="@+id/DetailCommunicationStartTime_TextView"
+                android:background="@drawable/communicate_rec"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@null"
-                    android:gravity="start|center"
-                    android:hint="2024-03-19 10:46:00" />
-                <TimePicker
-                    android:id="@+id/DetailCommunicationStartTime_TimePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:timePickerMode="spinner"
-                    android:visibility="gone"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="结束时间："
-                    android:textColor="#000000"/>
-                <TextView
-                    android:id="@+id/DetailCommunicationFinishTime_TextView"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="开始时间："
+                        android:textColor="#000" />
+
+                    <TextView
+                        android:id="@+id/DetailCommunicationStartTime_TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="@null"
+                        android:gravity="start|center"
+                        android:hint="2024-03-19 10:46:00" />
+
+                    <TimePicker
+                        android:id="@+id/DetailCommunicationStartTime_TimePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:timePickerMode="spinner"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@null"
-                    android:gravity="start|center"
-                    android:hint="2024-03-19 10:46:00" />
-                <TimePicker
-                    android:id="@+id/DetailCommunicationFinishTime_TimePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:timePickerMode="spinner"
-                    android:visibility="gone"/>
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="#f2f1f6" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="结束时间："
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/DetailCommunicationFinishTime_TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="@null"
+                        android:gravity="start|center"
+                        android:hint="2024-03-19 10:46:00" />
+
+                    <TimePicker
+                        android:id="@+id/DetailCommunicationFinishTime_TimePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:timePickerMode="spinner"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="参  与  者："
-                    android:textColor="#000000"/>
+                android:background="@drawable/communicate_rec"
+                android:orientation="vertical">
+
                 <EditText
                     android:id="@+id/DetailCommunicationParticipants_EditText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:gravity="start"
-                    android:hint="参与人员"
-                    android:singleLine="true"
-                    android:enabled="false"/>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:gravity="start|center"
+                    android:hint="交际主题"
+                    android:singleLine="true" />
+
                 <Button
                     android:id="@+id/DetailSelectParticipants_Button"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="end|center"
                     android:background="@mipmap/plus_sign"
                     android:backgroundTint="@color/white"
-                    android:layout_gravity="end|center"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="#f2f1f6" />
+
+                <EditText
+                    android:id="@+id/DetailCommunicationDetail_EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:gravity="top|start"
+                    android:hint="详细内容" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button_background"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="交际内容："
-                    android:textColor="#000000"/>
-                <EditText
-                    android:id="@+id/DetailCommunicationDetail_EditText"
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="top|start"
-                    android:hint="详细内容"
-                    android:background="@null"
-                    android:enabled="false"/>
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

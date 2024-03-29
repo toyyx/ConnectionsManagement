@@ -3,7 +3,7 @@
     android:layout_width="200dp"
     android:layout_height="300dp"
     android:orientation="vertical"
-    android:background="@drawable/pop_add_human_border">
+    android:background="#f2f1f6">
     <FrameLayout
         android:id="@+id/popTitleLinearLayout"
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:text="人物详情"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#3f8787"
             android:gravity="center"/>
         <Button
             android:id="@+id/popOperationButton"
@@ -31,6 +31,8 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:layout_marginLeft="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/communicate_rec"
         android:layout_marginRight="20dp"
         android:orientation="horizontal">
         <TextView
@@ -54,21 +56,17 @@
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/communicate_rec"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="姓名："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popName_TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:hint="人物姓名"
+            android:textColor="#000"
             android:maxLength="7"
             android:singleLine="true"
             android:enabled="false"/>
@@ -80,21 +78,17 @@
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:background="@drawable/communicate_rec"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_below="@+id/addGenderLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="关系："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popRelation_TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#000"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:hint="人物关系"
             android:singleLine="true"/>
     </LinearLayout>
@@ -106,21 +100,17 @@
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:background="@drawable/communicate_rec"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_below="@+id/popNameLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="性别："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popGender_TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#000"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:hint="人物性别"
             android:singleLine="true"/>
     </LinearLayout>
@@ -130,23 +120,19 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
+        android:background="@drawable/communicate_rec"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_below="@+id/popGenderLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="电话："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popPhone_TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:hint="人物电话"
+            android:textColor="#000"
             android:singleLine="true"
             android:enabled="false" />
     </LinearLayout>
@@ -156,23 +142,19 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginLeft="20dp"
+        android:background="@drawable/communicate_rec"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_below="@+id/popPhoneLinearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="邮箱："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popEmail_TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
             android:hint="人物邮箱"
+            android:textColor="#000"
             android:singleLine="true" />
     </LinearLayout>
     <LinearLayout
@@ -180,18 +162,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:background="@drawable/communicate_rec"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:layout_below="@+id/popEmailLinearLayout"
         android:layout_marginBottom="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:text="备注："
-            android:textColor="#000000"/>
         <TextView
             android:id="@+id/popNotes_TextView"
             android:layout_width="0dp"
@@ -199,6 +175,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
+            android:textColor="#000"
             android:hint="人物备注"
             android:maxLength="100"
             android:maxLines="3" />

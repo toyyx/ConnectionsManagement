@@ -17,10 +17,10 @@
           android:id="@+id/iv_registeractivity_back"
           android:layout_width="30dp"
           android:layout_height="30dp"
-          android:background="#000"
           android:layout_centerVertical="true"
           android:layout_marginLeft="10dp"
           android:clickable="true"
+          android:src="@drawable/iconapp"
           android:onClick="onClick" />
 
        <TextView
@@ -32,7 +32,7 @@
            android:textSize="20dp"
            android:layout_toRightOf="@+id/iv_registeractivity_back"
            android:layout_centerVertical="true"
-           android:layout_marginLeft="20dp"
+           android:layout_marginLeft="2000dp"
            />
     </RelativeLayout>
 
@@ -52,7 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="头           像："/>
+                android:layout_marginLeft="10dp"
+                android:text="  头 像："/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/tv_registeractivity_userimage"
                 android:layout_width="0dp"
@@ -75,7 +76,7 @@
                 android:background="@drawable/register_border"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                />
+                android:layout_marginRight="10dp" />
         </LinearLayout>
 <!-- 第二个文本编辑框  输入密码 -->
         <LinearLayout
@@ -90,6 +91,8 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+
                 android:inputType="textPassword"
                 android:hint="请输入密码"
                 android:background="@drawable/register_border"/>
@@ -107,6 +110,8 @@
                 android:hint="请再次输入密码"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+
                 android:inputType="textPassword"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
@@ -124,6 +129,7 @@
                 android:hint="请输入姓名"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
@@ -168,6 +174,7 @@
                 android:hint="请输入电话号码"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
@@ -184,6 +191,7 @@
                 android:hint="请输入邮箱"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
@@ -230,8 +238,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/rectangle"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:text="注册"
             android:textStyle="bold"
             android:onClick="onClick"

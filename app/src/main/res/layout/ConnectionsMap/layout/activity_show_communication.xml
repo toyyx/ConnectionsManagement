@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f2f1f6"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,11 +10,12 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/backShowCommunication_Button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/ic_result_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/icon_exitleft"
             android:backgroundTint="@color/white"
-            android:layout_gravity="start"/>
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/showCommunicationDate_TextView"
             android:layout_width="0dp"
@@ -22,65 +24,79 @@
             android:text="2024-03-21"
             android:textSize="30dp"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#3f8787"
             android:gravity="center"/>
         <Button
             android:id="@+id/addCommunication_Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/plus_sign"
+            android:background="@drawable/upload"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="当日交际"
-        android:textSize="20sp"
-        android:gravity="center"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"/>
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:background="@color/black"/>-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:gravity="center"
-            android:text="时间"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/black"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:text="交际内容"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"/>
-    <TextView
-        android:id="@+id/showNoCommunications_TextView"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:gravity="center"
-        android:text="当日暂无交际"
-        android:textSize="25sp"/>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ShowCommunication_RecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/communicate_rec"
+            android:text="当日交际"
+            android:textColor="#3f8787"
+            android:textSize="20sp"
+            android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/grey">
+        </View>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/communicate_rec">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="时间"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#a6a6a6"
+                android:layout_margin="1dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="交际内容"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#a6a6a6"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/showNoCommunications_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="当日暂无交际"
+            android:textSize="25sp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ShowCommunication_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/main_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ADADAD">
+    android:background="#c3d0d0">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,13 +13,16 @@
             android:id="@+id/main_title"
             android:layout_width="match_parent"
             android:layout_height="80dp">
+
             <ImageButton
                 android:id="@+id/toLeftGrawer_imageButton"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:src="@mipmap/plus_sign"/>
+                android:background="#C3D0D0"
+                android:scaleType="fitXY"
+                android:src="@drawable/setting_green" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -35,6 +38,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="人脉管理"
+                    android:textStyle="bold"
+                    android:textColor="#000"
                     android:textSize="20sp"/>
                 <LinearLayout
                     android:id="@+id/titleButton_LinearLayout"
@@ -47,10 +52,12 @@
                         android:layout_weight="1"
                         android:layout_gravity="center"
                         android:text="卡片展示"
-                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="14sp"
                         android:maxLines="1"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp" />
                     <Button
                         android:id="@+id/toDrawerFragment_Button"
                         android:layout_width="0dp"
@@ -58,7 +65,9 @@
                         android:layout_weight="1"
                         android:layout_gravity="center"
                         android:text="图谱展示"
-                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="14sp"
                         android:maxLines="1"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="10dp"/>
@@ -66,11 +75,11 @@
             </LinearLayout>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/toRightGrawer_userimage"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-                android:src="@mipmap/plus_sign"/>
+                android:src="@mipmap/plus_sign" />
         </LinearLayout>
         <!-- 用于容纳 Fragment 的容器 -->
         <androidx.fragment.app.FragmentContainerView
@@ -99,7 +108,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="start"
-        android:background="@color/white">
+        android:background="@color/grey">
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -109,6 +118,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
+            android:background="@drawable/communicate_rec"
             android:text="更多功能"/>
         <LinearLayout
             android:layout_width="match_parent"
@@ -189,9 +199,10 @@
         <Button
             android:id="@+id/exitLogin_Button"
             android:layout_width="match_parent"
+            android:layout_margin="50dp"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:background="@drawable/rounded_button_background"
+            android:background="@drawable/communicate_rec"
             android:text="退出登录"/>
         <View
             android:layout_width="match_parent"
@@ -206,16 +217,19 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/grey">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:src="@mipmap/ic_result_menu"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="15dp"
+                android:background="@color/grey"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/exit_left_green"
+                android:scaleType="fitXY"/>
             <!-- 占位的空间，使得右侧控件位于最右边 -->
             <TextView
                 android:layout_width="0dp"
@@ -226,10 +240,13 @@
 
             <ImageButton
                 android:id="@+id/editUser_ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:src="@mipmap/ic_result_menu"/>
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="15dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/refresh_1"
+                android:scaleType="fitXY"
+                android:background="@color/grey"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -249,88 +266,114 @@
         <TextView
             android:id="@+id/nowUserName_TextView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="10dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button_background"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/communicate_rec"
             android:gravity="center"
             android:text="用户名"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:background="@drawable/communicate_rec">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="姓名"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/grey">
+            </View>
             <TextView
                 android:id="@+id/nowUserRealName_TextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="姓名123"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:background="@drawable/communicate_rec">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="性别"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/grey">
+            </View>
             <TextView
                 android:id="@+id/nowUserGender_TextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="用户性别"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:background="@drawable/communicate_rec">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="电话"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/grey">
+            </View>
             <TextView
                 android:id="@+id/nowUserPhoneNumber_TextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="用户电话"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:background="@drawable/communicate_rec">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="邮箱"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/grey">
+            </View>
             <TextView
                 android:id="@+id/nowUserEmail_TextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/rounded_button_background"
                 android:gravity="center"
                 android:text="用户邮箱"/>
         </LinearLayout>
