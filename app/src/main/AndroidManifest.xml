@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".ConnectionsMap.ConnectionsManagementApplication"
+        android:name=".Tools.ConnectionsManagementApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,23 +17,26 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ConnectionsMap.EditRelationActivity"
+            android:name=".Face.FaceRecognitionActivity"
             android:exported="false" />
         <activity
-            android:name=".ConnectionsMap.EditUserActivity"
+            android:name=".Relations.EditRelationActivity"
             android:exported="false" />
         <activity
-            android:name=".ConnectionsMap.ShowCommunicationDetailActivity"
+            android:name=".RegisterAndLogin.EditUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Communications.ShowCommunicationDetailActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ConnectionsMap.ShowCommunicationActivity"
+            android:name=".Communications.Show.ShowCommunicationActivity"
             android:exported="false" />
         <activity
-            android:name=".ConnectionsMap.SearchParticipantsActivity"
+            android:name=".Relations.SearchParticipants.SearchParticipantsActivity"
             android:exported="false" />
         <activity
-            android:name=".ConnectionsMap.AddCommunicationActivity"
+            android:name=".Communications.AddCommunicationActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
@@ -49,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConnectionsMap.PopAddHumanActivity"
+            android:name=".Relations.PopAddHumanActivity"
             android:exported="false"
             android:theme="@style/TransparentTheme" />
         <activity

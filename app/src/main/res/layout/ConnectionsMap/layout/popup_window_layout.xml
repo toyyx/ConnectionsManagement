@@ -20,7 +20,7 @@
             android:background="@drawable/rounded_button_background"
             android:elevation="20dp" />
         <ImageButton
-            android:id="@+id/addRelationButton1"
+            android:id="@+id/faceSearchButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -1,0 +1,23 @@
+<!-- nav_menu_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:background="@color/purple_200">
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:src="@drawable/plus_sign"
+        android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/face_menu_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="123456"
+        android:gravity="center"
+        android:layout_margin="0dp"
+        android:background="@color/teal_200"/>
+</LinearLayout>

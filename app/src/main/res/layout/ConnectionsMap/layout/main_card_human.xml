@@ -108,7 +108,7 @@
             <ImageButton
                 android:id="@+id/toDetailPerson_List_ImageButton"
                 android:layout_width="20dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_height="match_parent"
                 android:src="@mipmap/ic_result_menu"
                 android:layout_gravity="end|center"/>

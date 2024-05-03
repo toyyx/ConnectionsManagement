@@ -20,8 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
-import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getFileFromURI
+import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
+import com.example.connectionsmanagement.Tools.ImageDownloader.getFileFromURI
 import com.example.connectionsmanagement.R
 import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.*
@@ -220,7 +220,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                                 val jsonObject = JSONObject(responseBody)
                                 runOnUiThread {
                                     if(jsonObject.getString("result")=="success"){
-                                        Toast.makeText(ConnectionsManagementApplication.context, "注册成功", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(ConnectionsManagementApplication.context, "注册成功\n"+jsonObject.getString("error_msg"), Toast.LENGTH_SHORT).show()
                                         val intent = Intent(ConnectionsManagementApplication.context, LoginActivity::class.java)
                                         startActivity(intent)
                                         finish()

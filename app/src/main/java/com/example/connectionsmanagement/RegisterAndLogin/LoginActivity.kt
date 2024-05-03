@@ -4,18 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.connectionsmanagement.ConnectionsMap.ConnectionsManagementApplication
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.downloadImage
+import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
+import com.example.connectionsmanagement.Tools.ImageDownloader.downloadImage
 import com.example.connectionsmanagement.ConnectionsMap.MainActivity
 import com.example.connectionsmanagement.MysqlServer.MySQLConnection
 import com.example.connectionsmanagement.R
@@ -93,7 +91,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.tv_loginactivity_register -> {
                 startActivity(Intent(this, RegisterActivity::class.java))
-                finish()
             }
 
             R.id.bt_loginactivity_login -> {
@@ -117,7 +114,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                                 jsonObject.getString("image_path"),
                                 jsonObject.getString("phone_number"),
                                 jsonObject.getString("email"))
-                            val job = async {  downloadImage(ConnectionsManagementApplication.context,ConnectionsManagementApplication.NowUser.image_path) }
+                            val job = async {  downloadImage(
+                                ConnectionsManagementApplication.context,
+                                ConnectionsManagementApplication.NowUser.image_path) }
                             // 等待所有协程执行完毕，并获取结果
                             job.await()
                             withContext(Dispatchers.Main) {

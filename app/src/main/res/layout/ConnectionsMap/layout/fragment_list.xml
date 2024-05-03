@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConnectionsMap.ListFragment"
+    tools:context=".ConnectionsMap.List.ListFragment"
     android:orientation="vertical">
 
     <!-- 搜索框 -->

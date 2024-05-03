@@ -1,48 +1,44 @@
 package com.example.connectionsmanagement.ConnectionsMap
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.RefreshUser
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.downloadImage
-import com.example.connectionsmanagement.ConnectionsMap.ImageDownloader.getBitmapFromLocalPath
-import com.example.connectionsmanagement.MysqlServer.MySQLConnection
-import com.example.connectionsmanagement.MysqlServer.Relation
+import com.example.connectionsmanagement.Calendar.CalendarFragment
+import com.example.connectionsmanagement.ConnectionsMap.List.ListFragment
+import com.example.connectionsmanagement.Face.FaceRecognitionActivity
+import com.example.connectionsmanagement.Tools.ImageDownloader.RefreshUser
+import com.example.connectionsmanagement.Tools.ImageDownloader.getBitmapFromLocalPath
 import com.example.connectionsmanagement.R
+import com.example.connectionsmanagement.RegisterAndLogin.EditUserActivity
 import com.example.connectionsmanagement.RegisterAndLogin.LoginActivity
 import com.example.connectionsmanagement.RegisterAndLogin.User
+import com.example.connectionsmanagement.Relations.PopAddHumanActivity
+import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
+import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.dpToPx
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     lateinit var nowUserPhone_TV:TextView
@@ -53,13 +49,24 @@ class MainActivity : AppCompatActivity() {
         val drawlayout=findViewById<DrawerLayout>(R.id.main_drawerLayout)
         nowUserPhone_TV=findViewById<TextView>(R.id.nowUserPhoneNumber_TextView)
 
-        switchFragment(ListFragment())
+        val List_fragment=ListFragment()
+        val Drawer_fragment=DrawerFragment()
+        val Calendar_fragment=CalendarFragment()
+
+        // 创建一个 ArrayList，元素类型为 Fragment
+        val fragmentList: ArrayList<Fragment> = ArrayList<Fragment>().apply{
+            add(List_fragment)
+            add(Drawer_fragment)
+            add(Calendar_fragment)
+        }
+        saveFragment(fragmentList)
+        showFragment(List_fragment)
 
         findViewById<Button>(R.id.toListFragment_Button).setOnClickListener {
-            switchFragment(ListFragment())
+            showFragment(List_fragment)
         }
         findViewById<Button>(R.id.toDrawerFragment_Button).setOnClickListener {
-            switchFragment(DrawerFragment())
+            showFragment(Drawer_fragment)
         }
 
         //底部导航栏
@@ -69,11 +76,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.main_menu_item -> {
                     // 处理菜单项1的点击事件
                     showPopupWindow(bottomNavigationView)
-                    Toast.makeText(this,"已点击",Toast.LENGTH_SHORT).show() // 显示Toast消息
                     true // 返回true表示事件已被处理
                 }
                 R.id.back_to_main->{
-                    switchFragment(ListFragment())
+                    showFragment(List_fragment)
                     bottomNavigationView.menu.findItem(R.id.main_menu_item).setVisible(true)
                     bottomNavigationView.menu.findItem(R.id.back_to_main).setVisible(false)
                     findViewById<TextView>(R.id.nowTitle_textView).text = "人脉管理"
@@ -84,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.main_menu_calendar -> {
                     // 处理菜单项1的点击事件
-                    switchFragment(CalendarFragment())
+                    showFragment(Calendar_fragment)
                     bottomNavigationView.menu.findItem(R.id.main_menu_item).setVisible(false)
                     bottomNavigationView.menu.findItem(R.id.back_to_main).setVisible(true)
                     findViewById<TextView>(R.id.nowTitle_textView).text = "交际事件"
@@ -184,8 +190,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             popupWindow.dismiss()
         }
+        popupView.findViewById<ImageButton>(R.id.faceSearchButton).setOnClickListener {
+            val intent = Intent(ConnectionsManagementApplication.context, FaceRecognitionActivity::class.java)
+            startActivity(intent)
+            popupWindow.dismiss()
+        }
     }
-
 
     //更新右侧抽屉的用户信息
     fun showUserInformation(user: User){
@@ -196,17 +206,62 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.nowUserGender_TextView).text = user.gender
         nowUserPhone_TV.text = user.phone_number
         findViewById<TextView>(R.id.nowUserEmail_TextView).text = user.email
-
-
     }
 
+    //存储Fragment
+    fun saveFragment(fragmentList:ArrayList<Fragment>){
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        for (fragment in fragmentList) {
+            // 在这里对每个 Fragment 进行操作
+            // 例如显示 Fragment、获取 Fragment 的属性等
+            fragmentTransaction.add(R.id.fragment_container, fragment)
+            fragmentTransaction.hide(fragment)
+        }
+        fragmentTransaction.commit()
+    }
     // 切换 Fragment 的方法
-    fun switchFragment(fragment: Fragment) {
-        val  fragmentManager: FragmentManager = supportFragmentManager;
-        val  fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+    fun showFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentManager.fragments.forEach { fragment ->
+            fragmentTransaction.hide(fragment)
+        }
+        // 显示指定的 Fragment
+        fragmentTransaction.show(fragment)
+        if(fragment is CalendarFragment){
+            fragment.adjustCalendar()
+        }else if(fragment is DrawerFragment){
+            if(ConnectionsManagementApplication.IsRelationsChanged_forDrawer) {
+                ConnectionsManagementApplication.IsRelationsChanged_forDrawer=false
+                GlobalScope.launch {
+                    val job=async { ImageDownloader.RefreshRelations()}
+                    job.await()
+                    withContext(Dispatchers.Main) {
+                        fragment.refresh()
+                    }
+                }
+            }
+        }else if(fragment is ListFragment){
+            //刷新关系列表
+            if(ConnectionsManagementApplication.IsRelationsChanged_forList){
+                Toast.makeText(ConnectionsManagementApplication.context, "关系已变化", Toast.LENGTH_SHORT).show()
+                ConnectionsManagementApplication.IsRelationsChanged_forList=false
+                GlobalScope.launch {
+                    val job1 = async {
+                        fragment.newCardResults  = fragment.RefreshcardResults()
+                    }
+                    job1.await()
+                    withContext(Dispatchers.Main) {
+                        fragment.cardResults.clear() // 清空旧的 cardResults
+                        fragment.cardResults.addAll(fragment.newCardResults) // 将新的 cardResults 添加到列表中
+                        //Toast.makeText(ConnectionsManagementApplication.context, "人物名字：${cardResults[0].name}", Toast.LENGTH_SHORT).show()
+                        fragment.adapter.notifyDataSetChanged()//通知数据变化
+                    }
+                }
+            }
+        }
+        fragmentTransaction.commit()
     }
-
 
 }

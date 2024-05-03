@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/face_menu_detect"
+        android:title="人脸检测"
+        android:checkable="true"
+        android:checked="true"/>
+    <item
+        android:id="@+id/face_menu_match"
+        android:title="人脸对比"
+        android:checkable="true"/>
+    <item
+        android:id="@+id/face_menu_search_1_N"
+        android:title="人脸搜索"
+        android:checkable="true"/>
+
+    <item
+        android:id="@+id/face_menu_search_M_N"
+        android:title="人群搜索"
+        android:checkable="true"/>
+</menu>
