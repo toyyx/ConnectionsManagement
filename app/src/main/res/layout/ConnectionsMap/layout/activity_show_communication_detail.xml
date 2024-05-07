@@ -41,7 +41,7 @@
             android:id="@+id/sureEditCommunication_Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/ic_result_menu"
+            android:background="@drawable/upload"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"
             android:visibility="gone"/>
@@ -197,27 +197,33 @@
                 android:background="@drawable/communicate_rec"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/DetailCommunicationParticipants_EditText"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@null"
-                    android:enabled="false"
-                    android:gravity="start|center"
-                    android:hint="交际主题"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/DetailCommunicationParticipants_EditText"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:gravity="start|center"
+                        android:hint="交际主题"
+                        android:singleLine="true" />
 
-                <Button
-                    android:id="@+id/DetailSelectParticipants_Button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end|center"
-                    android:background="@mipmap/plus_sign"
-                    android:backgroundTint="@color/white"
-                    android:visibility="gone" />
+                    <Button
+                        android:id="@+id/DetailSelectParticipants_Button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end|center"
+                        android:background="@mipmap/plus_sign"
+                        android:backgroundTint="@color/white"
+                        android:visibility="gone" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

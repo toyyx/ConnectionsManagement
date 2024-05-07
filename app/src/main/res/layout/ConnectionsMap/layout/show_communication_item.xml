@@ -83,7 +83,7 @@
                 android:layout_width="20dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/edit"
-                android:background="#fff"
+                android:background="#f2f1f6"
                 android:visibility="visible"
                 android:layout_gravity="end|center"/>
         </LinearLayout>
