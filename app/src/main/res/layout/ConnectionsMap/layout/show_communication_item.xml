@@ -82,7 +82,8 @@
                 android:id="@+id/toDetailCommunication_ImageButton"
                 android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_result_menu"
+                android:src="@drawable/edit"
+                android:background="#fff"
                 android:visibility="visible"
                 android:layout_gravity="end|center"/>
         </LinearLayout>

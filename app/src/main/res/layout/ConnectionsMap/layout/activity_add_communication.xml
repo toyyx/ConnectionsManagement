@@ -33,7 +33,7 @@
             android:id="@+id/sureAddCommunication_Button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/upload"
+            android:background="@drawable/plus_sign"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"/>
     </LinearLayout>

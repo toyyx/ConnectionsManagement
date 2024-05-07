@@ -33,7 +33,7 @@
             android:layout_marginRight="9dp"
             android:layout_width="38dp"
             android:layout_height="40dp"
-            android:src="@drawable/upload"
+            android:src="@drawable/edit"
             android:scaleType="center"
             android:backgroundTint="#f2f1f6"
             android:layout_gravity="end"/>

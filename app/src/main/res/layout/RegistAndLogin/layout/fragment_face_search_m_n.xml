@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="9dp"
-        android:background="#000"/>
+        android:background="#f2f1f6"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="9dp"
-        android:background="#000"/>
+        android:background="#f2f1f6"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="9dp"
-        android:background="#000"/>
+        android:background="#f2f1f6"/>
     <Button
         android:id="@+id/faceSearch_M_N_startSearch_Button"
         android:layout_width="match_parent"

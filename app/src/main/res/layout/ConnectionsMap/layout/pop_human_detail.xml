@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
+    android:layout_width="300dp"
     android:layout_height="300dp"
     android:orientation="vertical"
     android:background="#f2f1f6">
@@ -20,16 +20,14 @@
             android:id="@+id/popOperationButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/upload"
-            android:backgroundTint="@color/white"
+            android:background="@drawable/edit"
             android:layout_gravity="end"/>
     </FrameLayout>
 
     <LinearLayout
         android:id="@+id/popImageLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_height="70dp"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/communicate_rec"
@@ -44,7 +42,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/popImage"
             android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:src="@mipmap/ic_result_menu"/>
@@ -161,7 +159,7 @@
         android:id="@+id/popNotesLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:background="@drawable/communicate_rec"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -171,7 +169,7 @@
         <TextView
             android:id="@+id/popNotes_TextView"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:gravity="start|center"
