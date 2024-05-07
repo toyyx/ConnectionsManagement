@@ -18,9 +18,9 @@
             android:gravity="center"/>
         <Button
             android:id="@+id/popOperationButton"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@mipmap/plus_sign"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/upload"
             android:backgroundTint="@color/white"
             android:layout_gravity="end"/>
     </FrameLayout>

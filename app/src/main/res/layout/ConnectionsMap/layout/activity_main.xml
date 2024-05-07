@@ -244,7 +244,7 @@
                 android:layout_height="30dp"
                 android:layout_margin="15dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/refresh_1"
+                android:src="@drawable/edit"
                 android:scaleType="fitXY"
                 android:background="@color/grey"/>
         </LinearLayout>

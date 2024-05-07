@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="头像："
-            android:textColor="#a7a7a7"/>
+            android:textColor="#666666"/>
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/addImage"
             android:layout_width="0dp"
@@ -112,11 +112,13 @@
                 android:id="@+id/gender_man"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#000"
                 android:text="男"/>
             <RadioButton
                 android:id="@+id/gender_woman"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#000"
                 android:text="女"/>
         </RadioGroup>
     </LinearLayout>

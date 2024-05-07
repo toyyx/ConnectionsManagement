@@ -26,9 +26,10 @@
             android:textSize="20sp"/>
         <ImageView
             android:id="@+id/sureEdit_editRelation_ImageView"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="60dp"
-            android:src="@drawable/exit_left_green"/>
+            android:layout_marginRight="8dp"
+            android:src="@drawable/upload"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
