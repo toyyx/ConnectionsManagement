@@ -1,8 +1,6 @@
 package com.example.connectionsmanagement.Relations
 
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -22,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader.getFileFromURI
+import com.example.connectionsmanagement.Tools.Tools.getFileFromUri
 import com.example.connectionsmanagement.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -34,11 +32,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDateTime
 
-
+//增加人物的弹窗
 class PopAddHumanActivity : AppCompatActivity() {
     lateinit var imageUri: Uri  //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
@@ -132,7 +129,7 @@ class PopAddHumanActivity : AppCompatActivity() {
         //确定按钮的功能：新增人物
         findViewById<Button>(R.id.popAddSureButton).setOnClickListener {
             //获取用户选择的图片文件
-            val selectedImageFile = getFileFromURI(imageUri)
+            val selectedImageFile = getFileFromUri(imageUri)
             // 创建OkHttpClient实例
             val client = OkHttpClient()
             // 构建MultipartBody，用于上传图片
@@ -194,19 +191,4 @@ class PopAddHumanActivity : AppCompatActivity() {
         }
     }
 
-    //uri转变为bitmap
-    fun getBitmapFromUri(uri:Uri?)=uri?.let {  contentResolver.openFileDescriptor(uri,"r")?.use {
-        BitmapFactory.decodeFileDescriptor(it.fileDescriptor) }}
-
-    //保存bitmap图片至本地
-    fun saveBitmap(bitmap: Bitmap?){
-        val humanImageFile= File(externalCacheDir,"${findViewById<EditText>(R.id.addNameText).text.toString()}${findViewById<EditText>(
-            R.id.addNotesText
-        ).text.toString()}.jpg")
-        if(!humanImageFile.exists()){
-            humanImageFile.createNewFile()
-        }
-        val saveHumanImageFileStream= FileOutputStream(humanImageFile)
-        bitmap?.compress(Bitmap.CompressFormat.JPEG,100,saveHumanImageFileStream)
-    }
 }

@@ -19,6 +19,7 @@ class SearchResultAdapter(private val results: List<SearchPerson>, private val l
         val resultName = itemView.findViewById<TextView>(R.id.searchName)
         val checkBox = itemView.findViewById<CheckBox>(R.id.searchSelect)
 
+        //设置复选框的点击回调
         init {
             checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                 val position = adapterPosition
@@ -48,6 +49,7 @@ class SearchResultAdapter(private val results: List<SearchPerson>, private val l
         return results.size
     }
 
+    //复选框操作接口，在SearchParticipantsActivity中实现
     interface OnCheckBoxClickListener {
         fun onCheckBoxClick(position: Int, isChecked: Boolean, personId:Int, name: String)
     }

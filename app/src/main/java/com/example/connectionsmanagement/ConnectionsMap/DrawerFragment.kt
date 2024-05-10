@@ -1,11 +1,9 @@
 package com.example.connectionsmanagement.ConnectionsMap
-//为配合drawer设置的Fragment，具体实现在ResultActivity
+
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -23,15 +21,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import com.example.connectionsmanagement.Tools.ImageDownloader.getBitmapFromLocalPath
 import com.example.connectionsmanagement.MysqlServer.MySQLConnection
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Relations.EditRelationActivity
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.Tools
+import com.example.connectionsmanagement.Tools.Tools.getBitmapFromLocalPath
 import com.example.connectionsmanagement.Tools.MySuperTextView
 import com.google.gson.Gson
 import de.hdodenhof.circleimageview.CircleImageView
@@ -49,14 +46,13 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-
+//人脉图谱展示
 class DrawerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
 
     //展示关系选中变量
     lateinit var thisView:View
     var selectedRelations = arrayListOf("朋友","亲人", "同学", "其他")
-
+    //人物详情弹窗布局
     val popupLayout = LayoutInflater.from(ConnectionsManagementApplication.context).inflate(R.layout.pop_human_detail, null)
     //获取浏览、编辑状态的控件
     val humanImage = popupLayout.findViewById<CircleImageView>(R.id.popImage)
@@ -75,29 +71,30 @@ class DrawerFragment : Fragment() {
     private var offsetX = 0f
     private var offsetY = 0f
 
+    //设置点击时间间隔限制，防止过于频繁的视图变化导致程序崩溃
     lateinit var loadingFL: FrameLayout
-    private var lastClickTime: Long = 0
-    private val clickInterval: Long = 200 // 设置点击间隔为0.2秒，若数据量增大时，可适当延长
+    private var lastClickTime: Long = 0 //上次点击时间
+    private val clickInterval: Long = 200 // 设置关系点击间隔为0.2秒，目前测试无故障，若数据量增大时，可适当延长
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreate", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreate", Toast.LENGTH_SHORT).show()//调试使用
 
     }
 
     override fun onStart() {
         super.onStart()
-        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onStart", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onStart", Toast.LENGTH_SHORT).show()//调试使用
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onResume", Toast.LENGTH_SHORT).show()
-        println("drawerfragment onResume")
+//        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onResume", Toast.LENGTH_SHORT).show()//调试使用
+        //当人脉变化时，更新本地人脉数据
         if(ConnectionsManagementApplication.IsRelationsChanged_forDrawer) {
             ConnectionsManagementApplication.IsRelationsChanged_forDrawer=false
             GlobalScope.launch {
-                val job=async { ImageDownloader.RefreshRelations()}
+                val job=async { Tools.RefreshRelations()}
                 job.await()
                 withContext(Dispatchers.Main) {
                     refresh()
@@ -110,11 +107,12 @@ class DrawerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreateView", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "drawerfragment onCreateView", Toast.LENGTH_SHORT).show()//调试使用
 
         //关系选择发生变动后刷新界面
         thisView = inflater.inflate(R.layout.drawer_fragment, container, false)
 
+        //界面刷新时的加载中动画
         loadingFL=thisView.findViewById<FrameLayout>(R.id.loadingImage_FrameLayout)
         loadingFL.setOnClickListener {
             // 执行点击事件的操作
@@ -125,7 +123,19 @@ class DrawerFragment : Fragment() {
         val checkBox_Family=thisView.findViewById<CheckBox>(R.id.checkBoxOfFamily)
         val checkBox_Classmate=thisView.findViewById<CheckBox>(R.id.checkBoxOfClassmate)
         val checkBox_Other=thisView.findViewById<CheckBox>(R.id.checkBoxOfOther)
+        val refresh_BT=thisView.findViewById<Button>(R.id.drawerfragment_refresh_button)
 
+        //手动刷新图谱按钮
+        refresh_BT.setOnClickListener{
+            if (System.currentTimeMillis() - lastClickTime >= clickInterval) {
+                lastClickTime = System.currentTimeMillis()
+                loadingFL.visibility=View.VISIBLE
+                refresh()
+                loadingFL.visibility=View.GONE
+            }
+        }
+
+        //关系变动时，更新图谱
         checkBox_Friend.setOnCheckedChangeListener { _, isChecked ->
             if (System.currentTimeMillis() - lastClickTime >= clickInterval) {
                 lastClickTime = System.currentTimeMillis()
@@ -138,11 +148,6 @@ class DrawerFragment : Fragment() {
                 }
                 refresh()
                 loadingFL.visibility=View.GONE
-//                val handler = Handler(Looper.getMainLooper())
-//                handler.postDelayed({
-//                    // 延迟一秒后执行的代码
-//                    loadingFL.visibility=View.GONE
-//                }, 1000) // 延迟一秒（1000毫秒）
             }else{
                 checkBox_Friend.isChecked=!isChecked
             }
@@ -161,11 +166,6 @@ class DrawerFragment : Fragment() {
                 }
                 refresh()
                 loadingFL.visibility=View.GONE
-//                val handler = Handler(Looper.getMainLooper())
-//                handler.postDelayed({
-//                    // 延迟一秒后执行的代码
-//                    loadingFL.visibility=View.GONE
-//                }, 1000) // 延迟一秒（1000毫秒）
             }else{
                 checkBox_Family.isChecked=!isChecked
             }
@@ -184,15 +184,9 @@ class DrawerFragment : Fragment() {
                 }
                 refresh()
                 loadingFL.visibility=View.GONE
-//                val handler = Handler(Looper.getMainLooper())
-//                handler.postDelayed({
-//                    // 延迟一秒后执行的代码
-//                    loadingFL.visibility=View.GONE
-//                }, 1000) // 延迟一秒（1000毫秒）
             }else{
                 checkBox_Classmate.isChecked=!isChecked
             }
-
         }
         checkBox_Other.setOnCheckedChangeListener { buttonView, isChecked ->
             if (System.currentTimeMillis() - lastClickTime >= clickInterval) {
@@ -207,15 +201,9 @@ class DrawerFragment : Fragment() {
                 }
                 refresh()
                 loadingFL.visibility=View.GONE
-//                val handler = Handler(Looper.getMainLooper())
-//                handler.postDelayed({
-//                    // 延迟一秒后执行的代码
-//                    loadingFL.visibility=View.GONE
-//                }, 1000) // 延迟一秒（1000毫秒）
             }else{
                 checkBox_Other.isChecked=!isChecked
             }
-
         }
 
         //设置平移功能
@@ -259,10 +247,8 @@ class DrawerFragment : Fragment() {
             override fun onScaleEnd(detector: ScaleGestureDetector) {}
         })
 
+        //设置平移和缩放监听器
         thisView.setOnTouchListener { _, event ->
-            // 让 DrawerLayout 处理它的默认行为 如：侧边菜单打开时，点击阴影处，将关闭菜单
-            //super.onTouchEvent(event)
-
             //自定义处理触摸事件
             gestureDetector.onTouchEvent(event)
             scaleGestureDetector.onTouchEvent(event)
@@ -271,11 +257,13 @@ class DrawerFragment : Fragment() {
             }
             return@setOnTouchListener true
         }
+
+        //在createView时初始刷新视图，确保获取到人脉数据
         try {
             refresh()
         } catch (e: UninitializedPropertyAccessException) {
             GlobalScope.launch {
-                val job=async { ImageDownloader.RefreshRelations()}
+                val job=async { Tools.RefreshRelations()}
                 job.await()
                 withContext(Dispatchers.Main) {
                     refresh()
@@ -286,10 +274,7 @@ class DrawerFragment : Fragment() {
         return thisView
     }
 
-
     companion object {
-        // TODO: Rename and change types and number of parameters
-
     }
 
     fun dpToPx(dp: Int): Float {
@@ -402,6 +387,7 @@ class DrawerFragment : Fragment() {
         //绘制关系图
         createGraph(userSuperTextView,connectionsList, relativeHumanLayout, relativeLineLayout)
         if(relativeHumanLayout.childCount>1){
+            //异常显示情况时尝试修复
             if(abs(relativeHumanLayout.getChildAt(0).x - relativeHumanLayout.getChildAt(1).x)>300){
                 Toast.makeText(
                     ConnectionsManagementApplication.context,
@@ -414,18 +400,21 @@ class DrawerFragment : Fragment() {
 
     }
 
+    //删除人物
     suspend fun deleteRelation(personId:Int):Boolean{
+        //获取操作结果数据
         val jsonString = MySQLConnection.fetchWebpageContent("DeleteRelation",personId.toString(),"")
+
+        //防止响应异常
         try {
             // 解析 JSON 字符串为 JSON 对象
             val jsonObject = JSONObject(jsonString)
         }catch(e: JSONException){
-            // 如果转换失败，则处理异常，例如输出错误信息或者提示用户输入有效的 JSON 字符串
-            withContext(Dispatchers.Main) {
-                Toast.makeText(ConnectionsManagementApplication.context, "网络错误", Toast.LENGTH_SHORT).show()
-            }
+            // 如果转换失败，则处理异常
+            withContext(Dispatchers.Main) { Toast.makeText(ConnectionsManagementApplication.context, "网络错误", Toast.LENGTH_SHORT).show() }
             return false
         }
+
         return withContext(Dispatchers.Main) {
             //相应结果为success
             if(JSONObject(jsonString).getString("result")=="success"){
@@ -440,7 +429,7 @@ class DrawerFragment : Fragment() {
         }
     }
 
-    //人脉关系图绘制 备注：目前已实现人物围绕中心绕圈分布，重叠时圆圈自动外扩，展现一圈圈的人脉关系图
+    //人脉关系图绘制 备注：目前已实现人物围绕中心绕圈分布，重叠时圆圈自动外扩，展现圈层形式的人脉关系图
     private fun createGraph(
         centerSuperTextView: MySuperTextView,
         mySuperTextViewList: ArrayList<MySuperTextView>,

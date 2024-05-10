@@ -27,7 +27,7 @@ import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
+//展示交际详情activity
 class ShowCommunicationDetailActivity : AppCompatActivity() {
     lateinit var Title_EditText:EditText
     lateinit var Address_EditText:EditText
@@ -41,7 +41,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
     lateinit var edit_Button: ImageButton
     lateinit var sureEdit_Button: Button
     lateinit var SelectParticipants_Button: Button
-    lateinit var thisCommunication: ShowCommunication
+    lateinit var thisCommunication: ShowCommunication//当前展示的交际
 
     lateinit var startTimeString:String
     lateinit var finishTimeString:String
@@ -49,7 +49,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_communication_detail)
-
+        //初始化
         initView()
     }
 
@@ -68,8 +68,8 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         sureEdit_Button=findViewById(R.id.sureEditCommunication_Button)
         SelectParticipants_Button=findViewById(R.id.DetailSelectParticipants_Button)
 
-        thisCommunication=Gson().fromJson(intent.getStringExtra("thisCommunication"),
-            ShowCommunication::class.java)
+        //获取intent传递的交际数据
+        thisCommunication=Gson().fromJson(intent.getStringExtra("thisCommunication"), ShowCommunication::class.java)
 
         Title_EditText.setText(thisCommunication.title)
         Address_EditText.setText(thisCommunication.address)
@@ -82,7 +82,6 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         StartTime_TimePicker.hour=thisStartLocalDateTime.hour
         StartTime_TimePicker.minute=thisStartLocalDateTime.minute
 
-
         val thisFinishLocalDateTime=stringToLocalDateTime(thisCommunication.finishTime)
         finishTimeString=thisCommunication.finishTime
         FinishTime_TimePicker.setIs24HourView(true)
@@ -90,6 +89,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         FinishTime_TimePicker.hour=thisFinishLocalDateTime.hour
         FinishTime_TimePicker.minute=thisFinishLocalDateTime.minute
 
+        //参与者的界面显示
         var first=true
         var stringBuilder=StringBuilder()
         thisCommunication.participants.forEach {
@@ -101,20 +101,23 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         }
         Participants_EditText.setText(stringBuilder.toString())
 
-
+        //返回按钮
         back_Button.setOnClickListener {
             finish()
         }
 
+        //开始编辑按钮
         edit_Button.setOnClickListener {
-            startEdit()
+            startEdit()//开始编辑模式
         }
 
+        //完成编辑按钮
         sureEdit_Button.setOnClickListener {
-            if(Title_EditText.text.trim().isNotEmpty()){
+            if(Title_EditText.text.trim().isNotEmpty()){//检查主题非空
                 if(StartTime_TimePicker.hour<FinishTime_TimePicker.hour||
-                    (StartTime_TimePicker.hour==FinishTime_TimePicker.hour&&StartTime_TimePicker.minute<FinishTime_TimePicker.minute)){
-                    endEdit()
+                    (StartTime_TimePicker.hour==FinishTime_TimePicker.hour&&StartTime_TimePicker.minute<FinishTime_TimePicker.minute)){//检查时间逻辑正确
+                    endEdit()//结束编辑模式
+                    //获取参与者数据
                     var  participantsIdArray=ArrayList<Int>()
                     thisCommunication.participants.forEach {
                         participantsIdArray.add(it.personId)
@@ -173,7 +176,9 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
             }
         }
 
+        //选择参与者按钮
         SelectParticipants_Button.setOnClickListener {
+            //进入查找并选择参与者界面
             val intent = Intent(ConnectionsManagementApplication.context, SearchParticipantsActivity::class.java)
             intent.putExtra("nowParticipantsJson", Gson().toJson(thisCommunication.participants))
             intent.putExtra("sender","ShowCommunicationDetailActivity")
@@ -181,6 +186,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         }
     }
 
+    //处理从选择参与者界面传递回的数据
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -200,6 +206,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         }
     }
 
+    //开始编辑模式
     fun startEdit(){
         Title_EditText.isEnabled=true
         Address_EditText.isEnabled=true
@@ -213,6 +220,7 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         SelectParticipants_Button.visibility=View.VISIBLE
     }
 
+    //结束编辑模式
     fun endEdit(){
         Title_EditText.isEnabled=false
         Address_EditText.isEnabled=false
@@ -231,16 +239,19 @@ class ShowCommunicationDetailActivity : AppCompatActivity() {
         FinishTime_TextView.text=finishTimeString
     }
 
+    //字符串转化为LocalDateTime类型
     fun stringToLocalDateTime(timeString: String): LocalDateTime {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return LocalDateTime.parse(timeString, formatter)
     }
 
+    //LocalDateTime类型转化为字符串
     fun LocalDateTimeToString(datetime: LocalDateTime): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return datetime.format(formatter)
     }
 
+    //更新时间字符串中的小时、分钟
     fun stringUpdateHour_Minute(timeString: String,hour:Int,minute:Int):String{
         val thisLocalDateTime=stringToLocalDateTime(timeString)
         return LocalDateTimeToString(thisLocalDateTime.withHour(hour).withMinute(minute))

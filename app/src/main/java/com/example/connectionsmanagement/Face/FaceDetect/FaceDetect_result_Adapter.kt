@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.connectionsmanagement.R
-import com.example.connectionsmanagement.Tools.ImageDownloader.getBitmapFromBase64
+import com.example.connectionsmanagement.Tools.Tools.getBitmapFromBase64
 import org.json.JSONArray
 import org.json.JSONObject
 
-
+//人脸检测结果适配器
 class FaceDetect_result_Adapter(private var results: JSONArray) : RecyclerView.Adapter<FaceDetect_result_Adapter.ViewHolder>() {
 
     //获取视图控件
@@ -53,11 +53,13 @@ class FaceDetect_result_Adapter(private var results: JSONArray) : RecyclerView.A
         return results.length()
     }
 
+    //更新数据源
     fun updateData(jsonArray: JSONArray) {
         this.results = jsonArray
         notifyDataSetChanged()
     }
 
+    //从JSONObject中获取两个数据并转化为字符串
     fun getStringFromJSONObject(jsonObject: JSONObject,parameter1:String,parameter2:String):String{
         val stringBuilder=StringBuilder()
         stringBuilder.append(jsonObject.get(parameter1).toString())

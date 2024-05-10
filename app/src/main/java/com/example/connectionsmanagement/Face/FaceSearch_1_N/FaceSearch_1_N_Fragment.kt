@@ -1,7 +1,6 @@
 package com.example.connectionsmanagement.Face.FaceSearch_1_N
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +10,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.connectionsmanagement.Face.FaceDetect.FaceDetect_result_Adapter
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Tools.Camera
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.connectionsmanagement.Tools.Tools
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -31,21 +27,10 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FaceSearch_1_N_Fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+//人脸检测1:N
 class FaceSearch_1_N_Fragment : Fragment() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -55,6 +40,7 @@ class FaceSearch_1_N_Fragment : Fragment() {
         val thisView = inflater.inflate(R.layout.fragment_face_search_1_n, container, false)
         // 获取关联的 Activity
         val activity = requireActivity()
+        //设置图片获取来源
         val camera=Camera(activity,thisView.findViewById<ImageView>(R.id.faceSearch_1_N_Image_ImageView))
 
         //获取RecyclerView
@@ -67,11 +53,12 @@ class FaceSearch_1_N_Fragment : Fragment() {
         val resultTips_TV=thisView.findViewById<TextView>(R.id.faceSearch_1_N_resultTips_TextView)
         val showResult_LL = thisView.findViewById<LinearLayout>(R.id.faceSearch_1_N_showResult_LinearLayout)
 
+        //开始搜索按钮
         thisView.findViewById<Button>(R.id.faceSearch_1_N_startSearch_Button).setOnClickListener {
             if(camera.imageUri!=null) {
                 activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility=View.VISIBLE
                 //获取用户选择的图片文件
-                val selectedImageFile = ImageDownloader.getFileFromURI(camera.imageUri!!)
+                val selectedImageFile = Tools.getFileFromUri(camera.imageUri!!)
                 // 创建OkHttpClient实例
                 val client = OkHttpClient()
                 // 构建MultipartBody，用于上传图片
@@ -153,15 +140,6 @@ class FaceSearch_1_N_Fragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FaceSearch_1_M_Fragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FaceSearch_1_N_Fragment().apply {

@@ -22,16 +22,16 @@ import org.json.JSONObject
 import java.io.IOException
 import kotlin.collections.ArrayList
 
-
+//添加交际anticity
 class AddCommunicationActivity : AppCompatActivity() {
 
-    var receivedParticipants=ArrayList<SelectedParticipant>()
+    var receivedParticipants=ArrayList<SelectedParticipant>()//选中的参与者
     lateinit var communicationTitle_ET:EditText
     lateinit var communicationAddress_ET:EditText
     lateinit var communicationDetail_ET:EditText
     lateinit var startTimePicker:TimePicker // 假设你的 TimePicker 的 id 是 "timePicker"
     lateinit var finishTimePicker:TimePicker
-    lateinit var nowDate:String
+    lateinit var nowDate:String //当前时间
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +40,10 @@ class AddCommunicationActivity : AppCompatActivity() {
         communicationTitle_ET=findViewById<EditText>(R.id.AddCommunicationTitle_EditText)
         communicationAddress_ET=findViewById<EditText>(R.id.AddCommunicationAddress_EditText)
         communicationDetail_ET=findViewById<EditText>(R.id.AddCommunicationDetail_EditText)
-        startTimePicker= findViewById<TimePicker>(R.id.AddCommunicationStartTime_TimePicker) // 假设你的 TimePicker 的 id 是 "timePicker"
+        startTimePicker= findViewById<TimePicker>(R.id.AddCommunicationStartTime_TimePicker)
         finishTimePicker= findViewById<TimePicker>(R.id.AddCommunicationFinishTime_TimePicker)
         nowDate=intent.getStringExtra("date")!!
-
+        //时间选择器设置为24h制
         startTimePicker.setIs24HourView(true)
         finishTimePicker.setIs24HourView(true)
         findViewById<Button>(R.id.cancelCommunication_Button).setOnClickListener {
@@ -52,13 +52,15 @@ class AddCommunicationActivity : AppCompatActivity() {
 
         //确定添加交际按钮
         findViewById<Button>(R.id.sureAddCommunication_Button).setOnClickListener {
-            if(communicationTitle_ET.text.trim().isNotEmpty()){
+            if(communicationTitle_ET.text.trim().isNotEmpty()){//主题非空
                 if(startTimePicker.hour<finishTimePicker.hour||
-                    (startTimePicker.hour==finishTimePicker.hour&&startTimePicker.minute<finishTimePicker.minute)){
+                    (startTimePicker.hour==finishTimePicker.hour&&startTimePicker.minute<finishTimePicker.minute)){//时间逻辑正确
+                        //参与者数据
                         var  participantsIdArray=ArrayList<Int>()
                         receivedParticipants.forEach {
                             participantsIdArray.add(it.personId)
                         }
+
                         // 创建OkHttpClient实例
                         val client = OkHttpClient()
 
@@ -115,7 +117,7 @@ class AddCommunicationActivity : AppCompatActivity() {
 
         //选择参与者
         findViewById<Button>(R.id.selectParticipants_Button).setOnClickListener {
-            //进入主页面
+            //进入查询并选择参与者页面
             val intent = Intent(this, SearchParticipantsActivity::class.java)
             intent.putExtra("nowParticipantsJson", Gson().toJson(receivedParticipants))
             intent.putExtra("sender","AddCommunicationActivity")
@@ -125,6 +127,7 @@ class AddCommunicationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        //更新显示选中的参与者
         val stringBuilder = StringBuilder()
         var first=true
         receivedParticipants.forEach {
@@ -138,13 +141,13 @@ class AddCommunicationActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.AddCommunicationParticipants_EditText).setText(stringBuilder.toString())
     }
 
+    //从选择参与者界面传回的数据
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.hasExtra("selectedParticipants")) {
             // 处理接收到的数据
             receivedParticipants= ArrayList(Gson().fromJson(intent.getStringExtra("selectedParticipants"),Array<SelectedParticipant>::class.java).toList().toMutableList())
-
         }
     }
 }

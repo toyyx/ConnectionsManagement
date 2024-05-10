@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.connectionsmanagement.RegisterAndLogin.RegisterActivity"
-    android:background="@drawable/gradient_background"
-    >
-
+    android:background="@drawable/gradient_background">
     <RelativeLayout
         android:id="@+id/rl_registeractivity_top"
         android:layout_width="match_parent"
@@ -22,7 +20,6 @@
           android:clickable="true"
           android:src="@drawable/iconapp"
           android:onClick="onClick" />
-
        <TextView
            android:id="@+id/tv_registeractivity_register"
            android:layout_width="wrap_content"
@@ -32,10 +29,8 @@
            android:textSize="20dp"
            android:layout_toRightOf="@+id/iv_registeractivity_back"
            android:layout_centerVertical="true"
-           android:layout_marginLeft="2000dp"
-           />
+           android:layout_marginLeft="2000dp" />
     </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/ll_registeractivity_body"
         android:layout_width="match_parent"
@@ -62,12 +57,10 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/plus_sign"/>
         </LinearLayout>
-<!-- 第一个文本编辑框  输入用户名 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/et_registeractivity_username"
                 android:layout_width="match_parent"
@@ -78,12 +71,10 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" />
         </LinearLayout>
-<!-- 第二个文本编辑框  输入密码 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/et_registeractivity_password1"
                 android:layout_width="match_parent"
@@ -92,17 +83,14 @@
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-
                 android:inputType="textPassword"
                 android:hint="请输入密码"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
-<!-- 第三个文本编辑框  再次输入密码 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/et_registeractivity_password2"
                 android:layout_width="match_parent"
@@ -111,17 +99,14 @@
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-
                 android:inputType="textPassword"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
-        <!-- 第四个文本编辑框  再次输入姓名 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/et_registeractivity_name"
                 android:layout_width="match_parent"
@@ -133,12 +118,10 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
-        <!-- 第五个文本编辑框  再次输入性别 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <RadioGroup
                 android:id="@+id/rg_registeractivity_gender"
                 android:layout_width="match_parent"
@@ -151,6 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:checked="true"
                     android:text="男"/>
                 <RadioButton
                     android:id="@+id/gender_woman_waitforupdate"
@@ -161,7 +145,6 @@
                     android:text="女"/>
             </RadioGroup>
         </LinearLayout>
-        <!-- 第六个文本编辑框  再次输入电话号码 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -178,7 +161,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/register_border"/>
         </LinearLayout>
-        <!-- 第七个文本编辑框  再次输入邮箱 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,19 +178,16 @@
                 android:background="@drawable/register_border"/>
         </LinearLayout>
 
-<!-- 验证码部分 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal" >
-            <!-- 第四个文本编辑框  输入验证码 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <EditText
                     android:id="@+id/et_registeractivity_phoneCodes"
                     android:layout_width="0dp"
@@ -220,7 +199,6 @@
                     android:hint="请输入4位验证码"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/register_border"/>
-
                 <ImageView
                     android:id="@+id/iv_registeractivity_showCode"
                     android:layout_width="0dp"
@@ -228,11 +206,31 @@
                     android:layout_weight="1.5"
                     android:clickable="true"
                     android:onClick="onClick"
-                    android:layout_marginTop="-10dp"
-                />
+                    android:layout_marginTop="-10dp"/>
             </LinearLayout>
         </LinearLayout>
-        <!-- 注册按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/ll_registeractivity_bottom"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <CheckBox
+                android:id="@+id/register_checkBoxOfuserAgreement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"/>
+            <TextView
+                android:text="已阅读并同意"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/register_userAgreement_TextView"
+                android:text="《用户协议》"
+                android:textColor="#0AC4E3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
         <Button
             android:id="@+id/bt_registeractivity_register"
             android:layout_width="match_parent"
@@ -243,24 +241,6 @@
             android:textColor="#fff"
             android:text="注册"
             android:textStyle="bold"
-            android:onClick="onClick"
-            android:layout_marginTop="40dp"
-            />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/rl_registeractivity_bottom"
-            android:layout_marginTop="10dp"
-            >
-            <TextView
-                android:id="@+id/testtext"
-                android:layout_centerInParent="true"
-                android:text="注册即代表同意《用户协议》"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-
+            android:onClick="onClick" />
     </LinearLayout>
-
 </RelativeLayout>

@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.connectionsmanagement.Face.FaceSearch_1_N.FaceSearch_1_N_result_Adapter
 import com.example.connectionsmanagement.R
-import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.Tools
 import org.json.JSONArray
 import org.json.JSONObject
 
+//人脸搜索M:N 结果适配器
 class FaceSearch_M_N_result_Adapter(private var search_face_list: JSONArray,private var detect_face_list: JSONArray) : RecyclerView.Adapter<FaceSearch_M_N_result_Adapter.ViewHolder>() {
 
     //获取视图控件
@@ -45,7 +46,7 @@ class FaceSearch_M_N_result_Adapter(private var search_face_list: JSONArray,priv
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val detect_result = detect_face_list.getJSONObject(position)
         val search_result = search_face_list.getJSONObject(position)
-        holder.image_base64_IV.setImageBitmap(ImageDownloader.getBitmapFromBase64(detect_result.getString("corp_image_base64")))
+        holder.image_base64_IV.setImageBitmap(Tools.getBitmapFromBase64(detect_result.getString("corp_image_base64")))
         holder.age_TV.text=detect_result.get("age").toString()
         holder.gender_TV.text=getStringFromJSONObject(detect_result.getJSONObject("gender"),"type","probability")
         holder.face_shape_TV.text=getStringFromJSONObject(detect_result.getJSONObject("face_shape"),"type","probability")
@@ -57,12 +58,14 @@ class FaceSearch_M_N_result_Adapter(private var search_face_list: JSONArray,priv
         return detect_face_list.length()
     }
 
+    //更新数据源
     fun updateData(search_face_list: JSONArray,detect_face_list: JSONArray) {
         this.search_face_list=search_face_list
         this.detect_face_list=detect_face_list
         notifyDataSetChanged()
     }
 
+    //从JSONObject中获取两个数据并转化为字符串
     fun getStringFromJSONObject(jsonObject: JSONObject, parameter1:String, parameter2:String):String{
         val stringBuilder=StringBuilder()
         stringBuilder.append(jsonObject.get(parameter1).toString())

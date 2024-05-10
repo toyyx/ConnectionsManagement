@@ -28,15 +28,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="（数字越大置信度越高）">
+                    android:text="（括号中为置信度0~1，数字越大置信度越高）">
                 </TextView>
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="2dp"
-                android:background="#a7a7a7">
-            </View>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="年龄:"/>
+                    android:text="年  龄: "/>
                 <TextView
                     android:id="@+id/faceSearch_M_N_result_age_TextView"
                     android:layout_width="match_parent"
@@ -64,7 +58,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="性别:"/>
+                    android:text="性  别: "/>
                 <TextView
                     android:id="@+id/faceSearch_M_N_result_gender_TextView"
                     android:layout_width="match_parent"
@@ -84,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="脸型:"/>
+                    android:text="脸  型: "/>
                 <TextView
                     android:id="@+id/faceSearch_M_N_result_face_shape_TextView"
                     android:layout_width="match_parent"
@@ -104,13 +98,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="情绪:"/>
+                    android:text="情  绪: "/>
                 <TextView
                     android:id="@+id/faceSearch_M_N_result_emotion_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="emotion"/>
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="2dp"
+                android:background="#a7a7a7">
+            </View>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -121,7 +121,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="搜索结果"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textSize="18sp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

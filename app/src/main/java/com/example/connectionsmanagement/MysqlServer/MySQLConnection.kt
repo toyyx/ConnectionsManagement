@@ -15,8 +15,8 @@ import java.sql.SQLException
 //①用户账号User：用户编号userId（唯一）、用户名userName、密码password、姓名name、性别gender、头像image_path、电话phone_number、邮箱email
 //②人脉关系PersonalRelations：用户编号userId、人物编号personId、关系类型（朋友、亲人、同学、其他）relationship、姓名name、性别gender、头像image_path、电话phone_number、邮箱email、备注notes
 
+//与远程MySQL连接操作的类
  class MySQLConnection {
-
      companion object {
          val urlBasic="http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/"
 

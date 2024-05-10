@@ -20,7 +20,7 @@ import com.example.connectionsmanagement.Relations.Relation
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Relations.EditRelationActivity
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.Tools
 import com.google.gson.Gson
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-class CardPersonAdapter(private val context: Context, private val results: List<Relation>, private val listener: onDeleteButtonClickListener) : RecyclerView.Adapter<CardPersonAdapter.ViewHolder>() {
+//列表人脉适配器
+class ListPersonAdapter(private val context: Context, private val results: List<Relation>, private val listener: onDeleteButtonClickListener) : RecyclerView.Adapter<ListPersonAdapter.ViewHolder>() {
 
     //获取视图控件
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -56,7 +57,7 @@ class CardPersonAdapter(private val context: Context, private val results: List<
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val result = results[position]
-        holder.cardImage.setImageBitmap(ImageDownloader.getBitmapFromLocalPath(result.image_path))
+        holder.cardImage.setImageBitmap(Tools.getBitmapFromLocalPath(result.image_path))
         holder.cardName.text=result.name
         holder.cardRelation.text=result.relationship
         holder.cardPhoneNumber.text=result.phone_number
@@ -67,7 +68,7 @@ class CardPersonAdapter(private val context: Context, private val results: List<
         val layoutParams = holder.cardPerson_LinearLayout.layoutParams
         layoutParams.width = screenWidth
         holder.cardPerson_LinearLayout.layoutParams = layoutParams
-
+        //滑动框设置
         val horizontalScrollView=holder.horizontalScrollView
         horizontalScrollView.setOnTouchListener { v, event ->
             when (event.action) {
@@ -88,7 +89,7 @@ class CardPersonAdapter(private val context: Context, private val results: List<
             }
             false
         }
-
+        //删除人物按钮
         holder.deletePerson.setOnClickListener {
             //创建对话框
             val alertDialog = AlertDialog.Builder(context)
@@ -124,9 +125,9 @@ class CardPersonAdapter(private val context: Context, private val results: List<
             // 显示对话框
             alertDialog.show()
         }
-
+        //查看人物详情
         holder.detailPerson.setOnClickListener {
-            //进入主页面
+            //进入人物详情页面
             val intent = Intent(context, EditRelationActivity::class.java)
             intent.putExtra("thisRelation", Gson().toJson(result))
             context.startActivity(intent)
@@ -138,6 +139,7 @@ class CardPersonAdapter(private val context: Context, private val results: List<
         return results.size
     }
 
+    //删除人物接口，在ListFragment中实现
     interface onDeleteButtonClickListener {
         fun onDeleteButtonClick()
     }

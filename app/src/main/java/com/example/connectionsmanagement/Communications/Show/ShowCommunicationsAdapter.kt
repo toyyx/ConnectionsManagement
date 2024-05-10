@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-
+//交际展示的适配器
 class ShowCommunicationsAdapter(private val context: Context, private val shows: List<ShowCommunication>, private val listener: onDeleteButtonClickListener) : RecyclerView.Adapter<ShowCommunicationsAdapter.ViewHolder>()  {
     lateinit var view: View
 
@@ -41,7 +41,6 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
         val horizontalScrollView = itemView.findViewById<HorizontalScrollView>(R.id.showCommunication_HorizontalScrollView)
         val deleteCommunication=itemView.findViewById<Button>(R.id.deleteCommunication_Button)
         val detailCommunication=itemView.findViewById<ImageButton>(R.id.toDetailCommunication_ImageButton)
-
     }
 
     //设置单项的layout
@@ -51,7 +50,6 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
     }
 
     //控件设置
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val show = shows[position]
@@ -61,12 +59,13 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
         holder.showAddress.text="地址:${show.address}"
 
 
-        // 获取屏幕宽度
+        // 获取屏幕宽度，设置控件
         val screenWidth = context.resources.displayMetrics.widthPixels
         val layoutParams = holder.showContent.layoutParams
         layoutParams.width = screenWidth
         holder.showContent.layoutParams = layoutParams
 
+        //设置滑动块功能
         val horizontalScrollView=holder.horizontalScrollView
         horizontalScrollView.setOnTouchListener { v, event ->
             when (event.action) {
@@ -88,6 +87,7 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
             false
         }
 
+        //删除交际按钮
         holder.deleteCommunication.setOnClickListener {
             //创建对话框
             val alertDialog = AlertDialog.Builder(context)
@@ -123,8 +123,9 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
             alertDialog.show()
         }
 
+        //查看交际详情
         holder.detailCommunication.setOnClickListener {
-            //进入主页面
+            //进入详细交际页面
             val intent = Intent(context, ShowCommunicationDetailActivity::class.java)
             intent.putExtra("thisCommunication", Gson().toJson(show))
             context.startActivity(intent)
@@ -135,6 +136,7 @@ class ShowCommunicationsAdapter(private val context: Context, private val shows:
         return shows.size
     }
 
+    //删除按钮的功能接口，在ShowCommunicationActivity中实现
     interface onDeleteButtonClickListener {
         fun onDeleteButtonClick()
     }

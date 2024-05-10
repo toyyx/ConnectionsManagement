@@ -1,7 +1,6 @@
 package com.example.connectionsmanagement.Communications
 
-import android.graphics.Bitmap
-
+//交际数据
 class Communication(
     var eventId: String,
     var startTime: String,

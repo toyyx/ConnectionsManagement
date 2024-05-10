@@ -10,8 +10,8 @@ import com.coorchice.library.SuperTextView
 //备注:考虑到SuperTextView其余的强大功能，为方便后续设计，本项目仍希望采用它，特自定义此控件
  class MySuperTextView(thisId:Int,imageBitmap: Bitmap,name:String):LinearLayout(
     ConnectionsManagementApplication.context,null) {
-    private lateinit var superTextViewTop:SuperTextView
-    private lateinit var superTextViewButton:SuperTextView
+    private var superTextViewTop:SuperTextView
+    private var superTextViewButton:SuperTextView
     val personId:Int=thisId
 
     init {

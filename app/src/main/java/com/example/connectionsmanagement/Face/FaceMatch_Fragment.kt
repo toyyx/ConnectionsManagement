@@ -1,7 +1,6 @@
 package com.example.connectionsmanagement.Face
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Tools.Camera
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.connectionsmanagement.Tools.Tools
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -27,28 +24,12 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FaceMatch_Fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+//人脸对比
 class FaceMatch_Fragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    var first_create=true
-
+    var first_create=true //第一次创建标识
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText(
-            ConnectionsManagementApplication.context, "FaceMatch_Fragment_onCreate",
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "FaceMatch_Fragment_onCreate", Toast.LENGTH_SHORT).show()//调试使用
 
     }
 
@@ -56,12 +37,9 @@ class FaceMatch_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(
-            ConnectionsManagementApplication.context, "FaceMatch_Fragment_onCreateView",
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "FaceMatch_Fragment_onCreateView", Toast.LENGTH_SHORT).show()//调试使用
         val thisView = inflater.inflate(R.layout.fragment_face_match, container, false)
-        if(first_create) {
+        if(first_create) {//第一次创建时进行初始化设置
             first_create=false
 
             // 获取关联的 Activity
@@ -72,6 +50,7 @@ class FaceMatch_Fragment : Fragment() {
             val face_taken_2_TV = thisView.findViewById<TextView>(R.id.faceMatch_face_token2_TextView)
             val score_TV = thisView.findViewById<TextView>(R.id.faceMatch_score_TextView)
 
+            //设置图片获取
             var camera = Camera(
                 activity,
                 thisView.findViewById<ImageView>(R.id.faceMatch_Image_1_ImageView),
@@ -82,8 +61,8 @@ class FaceMatch_Fragment : Fragment() {
                 if (camera.imageUri != null && camera.imageUri_standby != null) {
                     activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility=View.VISIBLE
                     //获取用户选择的图片文件
-                    val selectedImageFile_1 = ImageDownloader.getFileFromURI(camera.imageUri!!)
-                    val selectedImageFile_2 = ImageDownloader.getFileFromURI(camera.imageUri_standby!!)
+                    val selectedImageFile_1 = Tools.getFileFromUri(camera.imageUri!!)
+                    val selectedImageFile_2 = Tools.getFileFromUri(camera.imageUri_standby!!)
                     // 创建OkHttpClient实例
                     val client = OkHttpClient()
                     // 构建MultipartBody，用于上传图片
@@ -175,21 +154,12 @@ class FaceMatch_Fragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FaceMatch_Fragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FaceMatch_Fragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }

@@ -1,39 +1,36 @@
 package com.example.connectionsmanagement.Face
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.connectionsmanagement.Face.FaceDetect.FaceDetect_Fragment
 import com.example.connectionsmanagement.Face.FaceSearch_1_N.FaceSearch_1_N_Fragment
 import com.example.connectionsmanagement.Face.FaceSearch_M_N.FaceSearch_M_N_Fragment
 import com.example.connectionsmanagement.R
-import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
 import com.google.android.material.navigation.NavigationView
 
-
+//人脸识别功能activity
 class FaceRecognitionActivity : AppCompatActivity() {
     lateinit var loadingCL: ConstraintLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_recognition)
+
+        //加载中的动画
         loadingCL=findViewById(R.id.loadingImage_ConstraintLayout)
         loadingCL.setOnClickListener {
             // 执行点击事件的操作
             true // 表示点击事件已被消费
         }
+
         val FaceDetect_fragment= FaceDetect_Fragment()
         val FaceMatch_fragment=FaceMatch_Fragment()
         val FaceSearch_1_N_fragment= FaceSearch_1_N_Fragment()
         val FaceSearch_M_N_fragment= FaceSearch_M_N_Fragment()
-        // 创建一个 ArrayList，元素类型为 Fragment
+
+        //存储并切换fragment
         val fragmentList: ArrayList<Fragment> = ArrayList<Fragment>().apply{
             add(FaceDetect_fragment)
             add(FaceMatch_fragment)
@@ -43,10 +40,12 @@ class FaceRecognitionActivity : AppCompatActivity() {
         saveFragment(fragmentList)
         showFragment(FaceDetect_fragment)
 
+        //返回按钮
         findViewById<ImageView>(R.id.back_faceRecognition_ImageView).setOnClickListener {
             finish()
         }
 
+        //人脸功能列表
         findViewById<NavigationView>(R.id.face_activity_navigationView).setNavigationItemSelectedListener  { menuItem ->
             when (menuItem.itemId) {
                 R.id.face_menu_detect -> {
@@ -58,14 +57,12 @@ class FaceRecognitionActivity : AppCompatActivity() {
                     true
                 }
                 R.id.face_menu_search_1_N -> {
-                    // 处理菜单项1的点击事件
                     showFragment(FaceSearch_1_N_fragment)
-                    true // 返回true表示事件已被处理
+                    true
                 }
                 R.id.face_menu_search_M_N -> {
-                    // 处理菜单项1的点击事件
                     showFragment(FaceSearch_M_N_fragment)
-                    true // 返回true表示事件已被处理
+                    true
                 }
                 // 添加其他菜单项的处理逻辑
                 else -> false // 返回false表示事件未被处理
@@ -73,6 +70,7 @@ class FaceRecognitionActivity : AppCompatActivity() {
         }
     }
 
+    //存储fragment
     fun saveFragment(fragmentList:ArrayList<Fragment>){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -85,6 +83,7 @@ class FaceRecognitionActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    //切换fragment
     fun showFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -95,6 +94,5 @@ class FaceRecognitionActivity : AppCompatActivity() {
         fragmentTransaction.show(fragment)
         fragmentTransaction.commit()
     }
-
 
 }

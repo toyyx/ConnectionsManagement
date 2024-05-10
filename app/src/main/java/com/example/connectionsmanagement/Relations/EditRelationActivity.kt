@@ -18,7 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.Tools
 import com.example.connectionsmanagement.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -33,6 +33,7 @@ import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
 
+//编辑人物信息
 class EditRelationActivity : AppCompatActivity() {
     lateinit var imageUri: Uri  //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
@@ -57,8 +58,8 @@ class EditRelationActivity : AppCompatActivity() {
 
 
         //设置初始值
-        imageUri= ImageDownloader.getUriFromLocalPath(thisRelation.image_path)
-        image_CIV.setImageBitmap(ImageDownloader.getBitmapFromLocalPath(thisRelation.image_path))
+        imageUri= Tools.getUriFromLocalPath(thisRelation.image_path)
+        image_CIV.setImageBitmap(Tools.getBitmapFromLocalPath(thisRelation.image_path))
         name_ET.setText(thisRelation.name)
         phone_ET.setText(thisRelation.phone_number)
         email_ET.setText(thisRelation.email)
@@ -150,13 +151,15 @@ class EditRelationActivity : AppCompatActivity() {
             popupMenu.show()
         }
 
+        //返回按钮
         back_IV.setOnClickListener {
             finish()
         }
 
+        //确定修改完成按钮
         sure_IV.setOnClickListener {
             //获取用户选择的图片文件
-            val selectedImageFile = ImageDownloader.getFileFromURI(imageUri)
+            val selectedImageFile = Tools.getFileFromUri(imageUri)
             // 创建OkHttpClient实例
             val client = OkHttpClient()
             // 构建MultipartBody，用于上传图片

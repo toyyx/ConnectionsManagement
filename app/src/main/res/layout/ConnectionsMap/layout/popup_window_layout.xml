@@ -2,108 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#c3d0d0"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:gravity="center">
     <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="40dp">
+        <ImageButton
+            android:id="@+id/addRelationButton"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/addrel"
+            android:elevation="20dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="添加人脉"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="40dp">
+        <ImageButton
+        android:id="@+id/faceSearchButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <ImageButton
-            android:id="@+id/addRelationButton"
-            android:layout_width="0dp"
+        android:background="@drawable/facescan"
+        android:elevation="20dp" />
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="50dp"
-            android:background="@drawable/addrel"
-            android:elevation="20dp" />
-        <ImageButton
-            android:id="@+id/faceSearchButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="45dp"
-            android:background="@drawable/facescan"
-            android:elevation="20dp" />
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton2"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
+            android:text="人脸识别"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"/>
     </LinearLayout>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:gravity="center">-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton3"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton4"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton5"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--    </LinearLayout>-->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:gravity="center">-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton6"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton7"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/addRelationButton8"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:src="@drawable/plus_sign"-->
-<!--            android:background="@drawable/rounded_button_background"-->
-<!--            android:elevation="20dp" />-->
-<!--    </LinearLayout>-->
-
 </LinearLayout>

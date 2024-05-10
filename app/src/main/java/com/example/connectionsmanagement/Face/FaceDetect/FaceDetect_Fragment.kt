@@ -1,8 +1,6 @@
 package com.example.connectionsmanagement.Face.FaceDetect
 
-import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.connectionsmanagement.R
-import com.example.connectionsmanagement.Relations.Relation
 import com.example.connectionsmanagement.Tools.Camera
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
-import com.example.connectionsmanagement.Tools.ImageDownloader.GetFaceDetectBase64
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.connectionsmanagement.Tools.Tools
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -32,18 +26,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FaceDetect_Fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+//人脸检测
 class FaceDetect_Fragment : Fragment() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -55,6 +39,7 @@ class FaceDetect_Fragment : Fragment() {
         val thisView = inflater.inflate(R.layout.fragment_face_detect, container, false)
         // 获取关联的 Activity
         var activity = requireActivity()
+        //设置图片从照相机或图库获取
         var camera=Camera(activity,thisView.findViewById<ImageView>(R.id.faceDetect_Image_ImageView))
 
         //获取RecyclerView
@@ -66,11 +51,12 @@ class FaceDetect_Fragment : Fragment() {
 
         val detectResult_TV=thisView.findViewById<TextView>(R.id.faceDetect_result_TextView)
 
+        //开始检测按钮
         thisView.findViewById<Button>(R.id.faceDetect_start_Button).setOnClickListener {
             if(camera.imageUri!=null) {
                 activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility=View.VISIBLE
                 //获取用户选择的图片文件
-                val selectedImageFile = ImageDownloader.getFileFromURI(camera.imageUri!!)
+                val selectedImageFile = Tools.getFileFromUri(camera.imageUri!!)
                 // 创建OkHttpClient实例
                 val client = OkHttpClient()
                 // 构建MultipartBody，用于上传图片
@@ -103,22 +89,23 @@ class FaceDetect_Fragment : Fragment() {
                                 // 读取特定键的值
                                 val result = jsonObject.get("result").toString()
                                 if (result == "success") {
-                                    Toast.makeText(
-                                        ConnectionsManagementApplication.context, "人脸检测成功",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(ConnectionsManagementApplication.context, "人脸检测成功", Toast.LENGTH_SHORT).show()
                                     val detect_result_full_jsonObject=jsonObject.getJSONObject("detect_result")
-                                    if(detect_result_full_jsonObject.getInt("face_num")==0){
+                                    if(!detect_result_full_jsonObject.has("face_num")){ //若检测成功，但响应结果为空
+                                        recyclerView.visibility=View.GONE
+                                        detectResult_TV.visibility=View.VISIBLE
+                                        detectResult_TV.text="接口结果异常，请尝试其它图片"
+                                    }
+                                    else if(detect_result_full_jsonObject.getInt("face_num")==0){//人脸数为0
                                         recyclerView.visibility=View.GONE
                                         detectResult_TV.visibility=View.VISIBLE
                                         detectResult_TV.text="当前图片未检测出人脸"
-                                    }else{
+                                    }else{//一切检测正常
                                         recyclerView.visibility=View.VISIBLE
                                         detectResult_TV.visibility=View.GONE
                                         // 更新数据源后通知适配器更新数据
                                         adapter.updateData(detect_result_full_jsonObject.getJSONArray("face_list"))
                                     }
-//                                    detectResult_TV.text=jsonObject.get("detect_result").toString()
                                 } else {
                                     Toast.makeText(
                                         ConnectionsManagementApplication.context, "人脸检测失败\nerror_msg:"+jsonObject.get("error_msg").toString(),
@@ -153,20 +140,10 @@ class FaceDetect_Fragment : Fragment() {
             }
         }
 
-
         return thisView
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FaceDetect_Fragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FaceDetect_Fragment().apply {

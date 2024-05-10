@@ -1,5 +1,6 @@
 package com.example.connectionsmanagement.RegisterAndLogin
 
+//用户
 class User(
     var userId:Int?,//用户id
     var userName: String?,//用户名

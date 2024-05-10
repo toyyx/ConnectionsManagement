@@ -9,9 +9,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="人  脸  检  测（最多显示面积最大的前五个人脸）"
+        android:text="人  群  搜  索 ( M : N )"
         android:gravity="center"
-        android:layout_margin="10dp"/>
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="（适用于包含多张人脸的图片，上限为5）"
+        android:gravity="center" />
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -22,21 +27,20 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="8dp"
-
         android:background="#fff">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="检  测  图  片："
+            android:text="搜  索  图  片："
             android:gravity="start|center"
             android:layout_margin="10dp"/>
         <ImageView
-            android:id="@+id/faceDetect_Image_ImageView"
+            android:id="@+id/faceSearch_M_N_Image_ImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/add2"
             android:layout_gravity="center"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -53,35 +57,34 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="检  测  结  果"
-
+            android:text="搜  索  结  果"
             android:textSize="20sp"
             android:gravity="center"
             android:layout_margin="10dp"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/faceDetect_RecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
         <TextView
-            android:id="@+id/faceDetect_result_TextView"
+            android:id="@+id/faceSearch_M_N_resultTips_TextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="请上传图片开始检测..."
-            android:textSize="20sp"
+            android:text="请上传图片开始搜索..."
+            android:textSize="15sp"
             android:gravity="start"
             android:background="@android:color/transparent"
             android:layout_margin="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/faceSearch_M_N_showResult_RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="9dp"
-        android:background="#000"/>
+        android:background="#f2f1f6"/>
     <Button
-        android:id="@+id/faceDetect_start_Button"
+        android:id="@+id/faceSearch_M_N_startSearch_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="开始检测"
+        android:text="开始搜索"
         android:layout_margin="10dp"/>
 </LinearLayout>

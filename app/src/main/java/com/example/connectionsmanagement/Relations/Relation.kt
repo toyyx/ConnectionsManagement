@@ -1,5 +1,6 @@
 package com.example.connectionsmanagement.Relations
 
+//人脉中的人物
 data class Relation (
     // 从 JSON 对象中获取数据
     var personId:Int,

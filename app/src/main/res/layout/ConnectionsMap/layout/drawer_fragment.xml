@@ -36,6 +36,25 @@
             android:checked="true"
             android:layout_below="@+id/checkBoxOfClassmate"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="若图谱显示异常，请点击"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/drawerfragment_refresh_button"/>
+        <Button
+            android:id="@+id/drawerfragment_refresh_button"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:text="手动刷新"
+            android:textSize="10sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 
 
     <RelativeLayout

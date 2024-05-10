@@ -7,20 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.connectionsmanagement.Face.FaceSearch_1_N.FaceSearch_1_N_result_Adapter
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Tools.Camera
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.connectionsmanagement.Tools.Tools
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -31,19 +26,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FaceSearch_M_N_Fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+//人脸搜索M:N
 class FaceSearch_M_N_Fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -53,6 +40,7 @@ class FaceSearch_M_N_Fragment : Fragment() {
         val thisView = inflater.inflate(R.layout.fragment_face_search_m_n, container, false)
         // 获取关联的 Activity
         val activity = requireActivity()
+        //设置图片获取
         val camera=Camera(activity,thisView.findViewById<ImageView>(R.id.faceSearch_M_N_Image_ImageView))
 
         //获取RecyclerView
@@ -63,12 +51,12 @@ class FaceSearch_M_N_Fragment : Fragment() {
 
         val resultTips_TV=thisView.findViewById<TextView>(R.id.faceSearch_M_N_resultTips_TextView)
 
-
+        //开始搜索按钮
         thisView.findViewById<Button>(R.id.faceSearch_M_N_startSearch_Button).setOnClickListener {
             if(camera.imageUri!=null) {
                 activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility=View.VISIBLE
                 //获取用户选择的图片文件
-                val selectedImageFile = ImageDownloader.getFileFromURI(camera.imageUri!!)
+                val selectedImageFile = Tools.getFileFromUri(camera.imageUri!!)
                 // 创建OkHttpClient实例
                 val client = OkHttpClient()
                 // 构建MultipartBody，用于上传图片
@@ -109,7 +97,7 @@ class FaceSearch_M_N_Fragment : Fragment() {
                                         ConnectionsManagementApplication.context, "人群搜索成功",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    ImageDownloader.GetFaceDetectBase64(selectedImageFile!!) { responseData ->
+                                    Tools.GetFaceDetectBase64(selectedImageFile!!) { responseData ->
                                         // 在这里处理返回的数据
                                         // responseData 就是 onResponse 方法中的返回值
                                         println("GetFaceDetectBase64: " + responseData.toString())
@@ -120,11 +108,11 @@ class FaceSearch_M_N_Fragment : Fragment() {
                                                 adapter.updateData(jsonObject.getJSONObject("search_result").getJSONArray("face_list"), responseData)
                                                 activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility = View.GONE
                                             }
-                                        }else{
+                                        }else{//防止人脸检测成功，但响应结果为空
                                             activity.runOnUiThread {
                                                 resultTips_TV.visibility=View.VISIBLE
                                                 showResult_RV.visibility=View.GONE
-                                                resultTips_TV.text="人脸检测失败"
+                                                resultTips_TV.text="接口结果异常，请尝试其它图片"
                                                 activity.findViewById<ConstraintLayout>(R.id.loadingImage_ConstraintLayout).visibility = View.GONE
                                             }
                                         }
@@ -167,15 +155,6 @@ class FaceSearch_M_N_Fragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FaceSearch_M_N_Fragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FaceSearch_M_N_Fragment().apply {

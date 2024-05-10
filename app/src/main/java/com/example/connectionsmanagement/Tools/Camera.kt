@@ -13,25 +13,29 @@ import com.example.connectionsmanagement.R
 import java.io.File
 import java.time.LocalDateTime
 
+//设置图片获取从照相机或图库
 class Camera() {
     var imageUri: Uri? = null  //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
     private lateinit var getPicturesFromAlbumActivity: ActivityResultLauncher<String> //相册获取图片-启动器
 
+    //备用变量
     var imageUri_standby: Uri? = null  //图片地址
     private lateinit var getPicturesFromCameraActivity_standby: ActivityResultLauncher<Uri>//拍照获取图片-启动器
     private lateinit var getPicturesFromAlbumActivity_standby: ActivityResultLauncher<String> //相册获取图片-启动器
 
-    // 主构造函数
+    // 辅助构造函数（当界面中有一个控件需要获取图片）
     constructor(activity: FragmentActivity, view_1: ImageView): this() {
         setCameraFunction(activity,view_1)
 
     }
+
+    // 辅助构造函数（当界面中有两个控件需要获取图片）
     constructor(activity: FragmentActivity, view_1: ImageView, view_2: ImageView): this() {
         setCameraFunction(activity,view_1,view_2)
     }
 
-
+    //设置图片获取功能
     fun setCameraFunction(activity: FragmentActivity, view: ImageView) {
         //设置初始值
         imageUri = null
@@ -57,6 +61,7 @@ class Camera() {
 
         //设置人物图像并保存至本地
         view.setOnClickListener {
+            //选择方式的菜单(照相机或图库)
             val popupMenu = PopupMenu(activity, it)
             popupMenu.menuInflater.inflate(R.menu.camera_or_album, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { item ->
@@ -95,6 +100,7 @@ class Camera() {
         }
     }
 
+    //设置图片获取功能
     fun setCameraFunction(activity: FragmentActivity, view_1: ImageView,view_2: ImageView) {
         //设置初始值
         imageUri = null

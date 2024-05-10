@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.connectionsmanagement.R
 import org.json.JSONArray
 
-
+//人脸检测1:N 结果适配器
 class FaceSearch_1_N_result_Adapter(private var user_list: JSONArray) : RecyclerView.Adapter<FaceSearch_1_N_result_Adapter.ViewHolder>() {
 
     //获取视图控件
@@ -38,6 +38,7 @@ class FaceSearch_1_N_result_Adapter(private var user_list: JSONArray) : Recycler
         return user_list.length()
     }
 
+    //更新数据源
     fun updateData(jsonArray: JSONArray) {
         this.user_list = jsonArray
         notifyDataSetChanged()

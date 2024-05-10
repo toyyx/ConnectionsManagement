@@ -8,65 +8,46 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.connectionsmanagement.ConnectionsMap.MainActivity
 import com.example.connectionsmanagement.Relations.Relation
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
-import com.example.connectionsmanagement.Tools.ImageDownloader
+import com.example.connectionsmanagement.Tools.Tools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ListFragment : Fragment() , CardPersonAdapter.onDeleteButtonClickListener {
-    // TODO: Rename and change types of parameters
+//人脉列表展示
+class ListFragment : Fragment() , ListPersonAdapter.onDeleteButtonClickListener {
     lateinit var thisView:View
     private lateinit var recyclerView: RecyclerView
-    lateinit var adapter: CardPersonAdapter
-    var cardResults = arrayListOf<Relation>()//搜索结果队列
-    lateinit var newCardResults: ArrayList<Relation>
-
+    lateinit var adapter: ListPersonAdapter
+    var listResults = arrayListOf<Relation>()//搜索结果列表
+    lateinit var newListResults: ArrayList<Relation> //新人物列表
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText(
-            ConnectionsManagementApplication.context, "List_Fragment_onCreate",
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "List_Fragment_onCreate", Toast.LENGTH_SHORT).show()//调试使用
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(
-            ConnectionsManagementApplication.context, "List_Fragment_onResume:${ConnectionsManagementApplication.IsRelationsChanged_forList}",
-            Toast.LENGTH_SHORT
-        ).show()
-        //刷新关系列表
+//        Toast.makeText(ConnectionsManagementApplication.context, "List_Fragment_onResume:${ConnectionsManagementApplication.IsRelationsChanged_forList}", Toast.LENGTH_SHORT).show()//调试使用
+        //当人脉变化时，更新本地人脉数据
         if(ConnectionsManagementApplication.IsRelationsChanged_forList){
-            Toast.makeText(ConnectionsManagementApplication.context, "关系已变化", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(ConnectionsManagementApplication.context, "关系已变化", Toast.LENGTH_SHORT).show()
             ConnectionsManagementApplication.IsRelationsChanged_forList=false
             GlobalScope.launch {
                 val job1 = async {
-                    newCardResults  = RefreshcardResults()
+                    newListResults  = RefreshListResults()
                 }
                 job1.await()
                 withContext(Dispatchers.Main) {
-                    cardResults.clear() // 清空旧的 cardResults
-                    cardResults.addAll(newCardResults) // 将新的 cardResults 添加到列表中
-                    //Toast.makeText(ConnectionsManagementApplication.context, "人物名字：${cardResults[0].name}", Toast.LENGTH_SHORT).show()
+                    listResults.clear() // 清空旧的 cardResults
+                    listResults.addAll(newListResults) // 将新的 cardResults 添加到列表中
                     adapter.notifyDataSetChanged()//通知数据变化
                 }
             }
@@ -77,27 +58,24 @@ class ListFragment : Fragment() , CardPersonAdapter.onDeleteButtonClickListener 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(
-            ConnectionsManagementApplication.context, "List_Fragment_onCreateView",
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(ConnectionsManagementApplication.context, "List_Fragment_onCreateView", Toast.LENGTH_SHORT).show()//调试使用
         thisView = inflater.inflate(R.layout.fragment_list, container, false)
         //获取RecyclerView
         recyclerView = thisView.findViewById<RecyclerView>(R.id.cardRecyclerView_ListFragment)
         recyclerView.layoutManager = LinearLayoutManager(ConnectionsManagementApplication.context)
-
-        adapter = CardPersonAdapter(requireContext(),cardResults,this)
+        //列表人脉适配器
+        adapter = ListPersonAdapter(requireContext(),listResults,this)
         recyclerView.adapter = adapter
 
         //获取人际关系列表
         GlobalScope.launch {
             val job1 = async {
-                newCardResults  = RefreshcardResults()
+                newListResults  = RefreshListResults()
             }
             job1.await()
             withContext(Dispatchers.Main) {
-                cardResults.clear() // 清空旧的 cardResults
-                cardResults.addAll(newCardResults) // 将新的 cardResults 添加到列表中
+                listResults.clear() // 清空旧的 cardResults
+                listResults.addAll(newListResults) // 将新的 cardResults 添加到列表中
                 adapter.notifyDataSetChanged()//通知数据变化
             }
         }
@@ -111,12 +89,13 @@ class ListFragment : Fragment() , CardPersonAdapter.onDeleteButtonClickListener 
             }
             //实时搜索
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                cardResults.clear()//清空搜索结果队列
+                listResults.clear()//清空搜索结果队列
                 // 在文本改变过程中实时触发的操作,charSequence包含了当前文本内容和正在输入的字符
                 val input=charSequence.toString()//获取输入内容
+                //从本地的人脉数据中匹配名字包含了搜索字符的人物
                 ConnectionsManagementApplication.NowRelations.forEach {
                     if(it.name.contains(input)){
-                        cardResults.add(it)//加入搜索结果队列
+                        listResults.add(it)//加入搜索结果队列
                     }
                 }
                 adapter.notifyDataSetChanged()//通知数据变化
@@ -130,25 +109,18 @@ class ListFragment : Fragment() , CardPersonAdapter.onDeleteButtonClickListener 
         return thisView
     }
 
-    suspend fun RefreshcardResults(): ArrayList<Relation>{
-        ImageDownloader.RefreshRelations()
+    //刷新人物列表
+    suspend fun RefreshListResults(): ArrayList<Relation>{
+        Tools.RefreshRelations()
         return ConnectionsManagementApplication.NowRelations
     }
 
+    //删除人物接口实现
     override fun onDeleteButtonClick() {
         onResume()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ListFragment().apply {
