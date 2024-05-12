@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
         val popupWindow = PopupWindow(
             popupView,
             width,
-            500,
+            400,
             true
         )
         // 创建圆角矩形形状

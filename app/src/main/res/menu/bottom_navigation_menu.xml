@@ -13,7 +13,4 @@
         android:title="back_menu"
         android:icon="@drawable/home"
         android:visible="false"/>
-    <item
-        android:title="menu_other"
-        android:icon="@mipmap/ic_result_menu"/>
 </menu>
