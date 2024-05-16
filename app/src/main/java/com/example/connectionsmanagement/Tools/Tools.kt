@@ -12,6 +12,10 @@ import com.example.connectionsmanagement.RegisterAndLogin.User
 import com.example.connectionsmanagement.Relations.Relation
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -29,12 +33,14 @@ import java.net.URL
 //通用工具类
 object Tools {
 
+    val baseUrl="http://47.103.72.193:8080/connection_server-1.0-SNAPSHOT"
+
     // 下载图片（根据图片在服务器的存储路径，并保存至本地缓存）
     fun downloadImage(context: Context, serverImagePath: String?) {
         try {
             //获取图片名
             val imageFileName= serverImagePath?.let { getSpecialFromString(it,"data_image/") }
-            val downloadUrl= "http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/data_image/$imageFileName"
+            val downloadUrl= "$baseUrl/data_image/$imageFileName"
             val localImagePath:String = context.externalCacheDir.toString()+imageFileName
 
             // 创建URL对象
@@ -115,16 +121,19 @@ object Tools {
 
     //更新本地人脉数据
     suspend fun RefreshRelations(){
-        //将 JSON 字符串 jsonString 解析为 ArrayList<Relation>
-        val jsonString = MySQLConnection.fetchWebpageContent(
-            "SearchRelations",
-            ConnectionsManagementApplication.NowUser.userId.toString(), ""
-        )
-        println("Server Response_RefreshRelations: $jsonString")
-        val listType = object : TypeToken<ArrayList<Relation>>() {}.type
-        ConnectionsManagementApplication.NowRelations = Gson().fromJson(jsonString, listType)
-        ConnectionsManagementApplication.NowRelations.forEach{
-            downloadImage(ConnectionsManagementApplication.context, it.image_path)
+        runBlocking {
+            val job1 = async {MySQLConnection.fetchWebpageContent("SearchRelations", ConnectionsManagementApplication.NowUser.userId.toString(), "")}
+            // 等待所有协程执行完毕，并获取结果
+            val jsonString: String = job1.await()
+            println("Server Response_RefreshRelations: $jsonString")
+            //将 JSON 字符串 jsonString 解析为 ArrayList<Relation>
+            val listType = object : TypeToken<ArrayList<Relation>>() {}.type
+            ConnectionsManagementApplication.NowRelations = Gson().fromJson(jsonString, listType)
+            ConnectionsManagementApplication.NowRelations.forEach {
+                val job2 = async {downloadImage(ConnectionsManagementApplication.context, it.image_path)}
+                // 等待所有协程执行完毕，并获取结果
+                job2.await()
+            }
         }
     }
 
@@ -188,7 +197,7 @@ object Tools {
 
         // 创建POST请求
         val request = Request.Builder()
-            .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/FaceDetectServlet")
+            .url("$baseUrl/FaceDetectServlet")
             .post(requestBody)
             .build()
 
@@ -234,14 +243,14 @@ object Tools {
 
     fun showUserAgreement(context:Context){
         val instructions = """
-                            欢迎使用《人脉管理小助手》！在使用之前，请仔细阅读并同意本用户协议及隐私政策。
+                            欢迎使用《脉络森林》！在使用之前，请仔细阅读并同意本用户协议及隐私政策。
                     
                     1.使用规则
                             用户应遵守国家相关法律法规，不得利用本应用程序进行违法活动。
                             用户不得利用本应用程序从事侵犯他人权益的行为，包括但不限于侵犯知识产权、侵犯个人隐私等。
                    
                     2.隐私政策
-                            我们尊重并保护用户的个人隐私。在用户使用《人脉管理小助手》时，我们可能会收集、存储和使用用户提供的个人信息，包括但不限于姓名、电话号码、电子邮件地址等。
+                            我们尊重并保护用户的个人隐私。在用户使用《脉络森林》时，我们可能会收集、存储和使用用户提供的个人信息，包括但不限于姓名、电话号码、电子邮件地址等。
                             我们收集用户个人信息的目的是为了向用户提供更好的服务体验，如记录人脉信息、进行人脸识别等。
                             我们承诺对用户的个人信息进行严格保密，并采取合理的安全措施保护用户的个人信息安全。
                             用户可以随时查看、修改、删除自己的个人信息，并有权选择是否同意提供个人信息。但是，拒绝提供个人信息可能导致无法使用部分功能或服务。

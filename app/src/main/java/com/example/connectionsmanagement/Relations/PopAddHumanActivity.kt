@@ -4,12 +4,14 @@ package com.example.connectionsmanagement.Relations
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
@@ -18,10 +20,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
 import com.example.connectionsmanagement.Tools.Tools.getFileFromUri
 import com.example.connectionsmanagement.R
+import com.example.connectionsmanagement.Tools.Tools
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import de.hdodenhof.circleimageview.CircleImageView
@@ -37,20 +41,28 @@ import java.time.LocalDateTime
 
 //增加人物的弹窗
 class PopAddHumanActivity : AppCompatActivity() {
-    lateinit var imageUri: Uri  //图片地址
+    private var imageUri: Uri?=null  //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
     private lateinit var getPicturesFromAlbumActivity: ActivityResultLauncher<String> //相册获取图片-启动器
-    lateinit var selectedGender:String//选中性别
-    lateinit var selectedRelation:String//选中关系
+    private var selectedGender:String="男"//选中性别
+    private var selectedRelation:String="朋友"//选中关系
+    lateinit var loadingLL: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pop_add_human)
 
+        //加载中的动画
+        loadingLL=findViewById(R.id.addHuman_loadingImage_LinearLayout)
+        loadingLL.setOnClickListener {
+            // 执行点击事件的操作
+            true // 表示点击事件已被消费
+        }
+
         //关系下拉框配置
         val spinner = findViewById<Spinner>(R.id.addRelationSpinner)
         val items = resources.getStringArray(R.array.relation_items)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
+        val adapter = CustomArrayAdapter(this, android.R.layout.simple_spinner_item, items)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -128,66 +140,82 @@ class PopAddHumanActivity : AppCompatActivity() {
 
         //确定按钮的功能：新增人物
         findViewById<Button>(R.id.popAddSureButton).setOnClickListener {
-            //获取用户选择的图片文件
-            val selectedImageFile = getFileFromUri(imageUri)
-            // 创建OkHttpClient实例
-            val client = OkHttpClient()
-            // 构建MultipartBody，用于上传图片
-            val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("userId", ConnectionsManagementApplication.NowUser.userId.toString())
-                .addFormDataPart("relationship",selectedRelation)
-                .addFormDataPart("name",findViewById<EditText>(R.id.addNameText).text.toString())
-                .addFormDataPart("gender",selectedGender)
-                .addFormDataPart("phone_number",findViewById<EditText>(R.id.addPhoneText).text.toString())
-                .addFormDataPart("email",findViewById<EditText>(R.id.addEmailText).text.toString())
-                .addFormDataPart("notes",findViewById<EditText>(R.id.addNotesText).text.toString())
-                .addFormDataPart("image", "avatar.jpg",
-                    selectedImageFile!!.asRequestBody("image/*".toMediaTypeOrNull()))
-                .build()
+            var name=findViewById<EditText>(R.id.addNameText).text.toString().trim { it <= ' ' }
+            var phone_number=findViewById<EditText>(R.id.addPhoneText).text.toString().trim { it <= ' ' }
+            var email=findViewById<EditText>(R.id.addEmailText).text.toString().trim { it <= ' ' }
+            var notes=findViewById<EditText>(R.id.addNotesText).text.toString().trim { it <= ' ' }
+            if(imageUri!=null && !TextUtils.isEmpty(name)&& !TextUtils.isEmpty(phone_number)&& !TextUtils.isEmpty(email)){
+                loadingLL.visibility=View.VISIBLE
+                //获取用户选择的图片文件
+                val selectedImageFile = getFileFromUri(imageUri!!)
+                // 创建OkHttpClient实例
+                val client = OkHttpClient()
+                // 构建MultipartBody，用于上传图片
+                val requestBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("userId", ConnectionsManagementApplication.NowUser.userId.toString())
+                    .addFormDataPart("relationship",selectedRelation)
+                    .addFormDataPart("name",name)
+                    .addFormDataPart("gender",selectedGender)
+                    .addFormDataPart("phone_number",phone_number)
+                    .addFormDataPart("email",email)
+                    .addFormDataPart("notes",notes)
+                    .addFormDataPart("image", "avatar.jpg",
+                        selectedImageFile!!.asRequestBody("image/*".toMediaTypeOrNull()))
+                    .build()
 
-            // 创建POST请求
-            val request = Request.Builder()
-                .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/AddRelationServlet")
-                .post(requestBody)
-                .build()
+                // 创建POST请求
+                val request = Request.Builder()
+                    .url("${Tools.baseUrl}/AddRelationServlet")
+                    .post(requestBody)
+                    .build()
 
-            // 发送请求并处理响应
-            client.newCall(request).enqueue(object : Callback {
-                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                    // 处理服务器响应，根据需要更新UI或执行其他操作
-                    val responseBody =  response.body?.string()//JsonString
-                    if (responseBody != null) {
-                        // 处理服务器响应内容，这里的 responseBody 就是网页内容
-                        // 可以在这里对网页内容进行解析、处理等操作
-                        println("Server Response: $responseBody")
-                        runOnUiThread {
-                            // 将JSON字符串解析为JsonObject
-                            val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
-                            // 读取特定键的值
-                            val result = jsonObject["result"].asString
-                            if(result=="success"){
-                                Toast.makeText(ConnectionsManagementApplication.context,"新增关系成功\n"+jsonObject["error_msg"].asString,Toast.LENGTH_SHORT).show()
-                                ConnectionsManagementApplication.IsRelationsChanged_forList = true
-                                ConnectionsManagementApplication.IsRelationsChanged_forDrawer=true
-                            }else{
-                                Toast.makeText(ConnectionsManagementApplication.context,"新增关系失败",Toast.LENGTH_SHORT).show()
+                // 发送请求并处理响应
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        // 处理服务器响应，根据需要更新UI或执行其他操作
+                        val responseBody =  response.body?.string()//JsonString
+                        if (responseBody != null) {
+                            // 处理服务器响应内容，这里的 responseBody 就是网页内容
+                            // 可以在这里对网页内容进行解析、处理等操作
+                            println("Server Response: $responseBody")
+                            runOnUiThread {
+                                // 将JSON字符串解析为JsonObject
+                                val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
+                                // 读取特定键的值
+                                val result = jsonObject["result"].asString
+                                if(result=="success"){
+                                    Toast.makeText(ConnectionsManagementApplication.context,"新增关系成功\n"+jsonObject["error_msg"].asString,Toast.LENGTH_SHORT).show()
+                                    ConnectionsManagementApplication.IsRelationsChanged_forList = true
+                                    ConnectionsManagementApplication.IsRelationsChanged_forDrawer=true
+                                }else{
+                                    Toast.makeText(ConnectionsManagementApplication.context,"新增关系失败,请确保照片中包含人脸",Toast.LENGTH_SHORT).show()
+                                }
+                                finish()
                             }
-                            finish()
+                        }
+                        runOnUiThread { loadingLL.visibility=View.GONE}
+                    }
+                    override fun onFailure(call: okhttp3.Call, e: IOException) {
+                        runOnUiThread {
+                            // 处理请求失败情况，例如网络连接问题
+                            Toast.makeText(
+                                ConnectionsManagementApplication.context,
+                                "网络连接失败",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            loadingLL.visibility=View.GONE
                         }
                     }
-                }
-                override fun onFailure(call: okhttp3.Call, e: IOException) {
-                    runOnUiThread {
-                        // 处理请求失败情况，例如网络连接问题
-                        Toast.makeText(
-                            ConnectionsManagementApplication.context,
-                            "网络连接失败",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            })
+                })
+            }else{
+                Toast.makeText(
+                    ConnectionsManagementApplication.context,
+                    "请完善人物信息",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         }
     }
 

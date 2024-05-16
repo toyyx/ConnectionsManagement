@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
@@ -94,12 +95,12 @@ class DrawerFragment : Fragment() {
         if(ConnectionsManagementApplication.IsRelationsChanged_forDrawer) {
             ConnectionsManagementApplication.IsRelationsChanged_forDrawer=false
             GlobalScope.launch {
-                val job=async { Tools.RefreshRelations()}
-                job.await()
-                withContext(Dispatchers.Main) {
+                Tools.RefreshRelations()
+                activity?.runOnUiThread {
                     refresh()
                 }
             }
+
         }
     }
 
@@ -262,13 +263,10 @@ class DrawerFragment : Fragment() {
         try {
             refresh()
         } catch (e: UninitializedPropertyAccessException) {
-            GlobalScope.launch {
-                val job=async { Tools.RefreshRelations()}
-                job.await()
-                withContext(Dispatchers.Main) {
-                    refresh()
-                }
+            runBlocking {
+                Tools.RefreshRelations()
             }
+            refresh()
         }
 
         return thisView

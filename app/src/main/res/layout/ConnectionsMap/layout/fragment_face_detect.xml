@@ -18,17 +18,12 @@
         android:layout_height="wrap_content"
         android:text="（最多显示面积最大的前五个人脸）"
         android:gravity="center" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="9dp"
-        android:background="#f2f1f6"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_margin="8dp"
-
         android:background="#fff">
         <TextView
             android:layout_width="wrap_content"
@@ -44,11 +39,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="9dp"
-        android:background="#f2f1f6"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

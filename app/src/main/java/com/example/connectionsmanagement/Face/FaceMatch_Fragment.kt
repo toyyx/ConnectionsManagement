@@ -80,7 +80,7 @@ class FaceMatch_Fragment : Fragment() {
 
                     // 创建POST请求
                     val request = Request.Builder()
-                        .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/FaceMatchServlet")
+                        .url("${Tools.baseUrl}/FaceMatchServlet")
                         .post(requestBody)
                         .build()
 

@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
@@ -123,67 +124,80 @@ class EditUserActivity : AppCompatActivity() {
 
         //确定完成修改按钮
         sure_IV.setOnClickListener {
-            //获取用户选择的图片文件
-            val selectedImageFile = Tools.getFileFromUri(imageUri)
-            // 创建OkHttpClient实例
-            val client = OkHttpClient()
-            // 构建MultipartBody，用于上传图片
-            val requestBody = MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("userId", ConnectionsManagementApplication.NowUser.userId.toString())
-                .addFormDataPart("userName",userName_ET.text.toString())
-                .addFormDataPart("name",name_ET.text.toString())
-                .addFormDataPart("gender",selectedGender!!)
-                .addFormDataPart("phone_number",phoneNumber_ET.text.toString())
-                .addFormDataPart("email",email_ET.text.toString())
-                .addFormDataPart("image_path", ConnectionsManagementApplication.NowUser.image_path!!)
-                .addFormDataPart("image", "avatar.jpg",
-                    selectedImageFile!!.asRequestBody("image/*".toMediaTypeOrNull()))
-                .build()
+            val userName=userName_ET.text.toString().trim { it <= ' ' }
+            val name=name_ET.text.toString().trim { it <= ' ' }
+            val phone_number=phoneNumber_ET.text.toString().trim { it <= ' ' }
+            val email=email_ET.text.toString().trim { it <= ' ' }
+            if(!TextUtils.isEmpty(userName)&&!TextUtils.isEmpty(name)&&!TextUtils.isEmpty(phone_number)&&!TextUtils.isEmpty(email)){
+                //获取用户选择的图片文件
+                val selectedImageFile = Tools.getFileFromUri(imageUri)
+                // 创建OkHttpClient实例
+                val client = OkHttpClient()
+                // 构建MultipartBody，用于上传图片
+                val requestBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("userId", ConnectionsManagementApplication.NowUser.userId.toString())
+                    .addFormDataPart("userName",userName)
+                    .addFormDataPart("name",name)
+                    .addFormDataPart("gender",selectedGender!!)
+                    .addFormDataPart("phone_number",phone_number)
+                    .addFormDataPart("email",email)
+                    .addFormDataPart("image_path", ConnectionsManagementApplication.NowUser.image_path!!)
+                    .addFormDataPart("image", "avatar.jpg",
+                        selectedImageFile!!.asRequestBody("image/*".toMediaTypeOrNull()))
+                    .build()
 
-            // 创建POST请求
-            val request = Request.Builder()
-                .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/UpdateUserServlet")
-                .post(requestBody)
-                .build()
+                // 创建POST请求
+                val request = Request.Builder()
+                    .url("${Tools.baseUrl}/UpdateUserServlet")
+                    .post(requestBody)
+                    .build()
 
-            // 发送请求并处理响应
-            client.newCall(request).enqueue(object : Callback {
-                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                    // 处理服务器响应，根据需要更新UI或执行其他操作
-                    val responseBody =  response.body?.string()//JsonString
-                    if (responseBody != null) {
-                        // 处理服务器响应内容，这里的 responseBody 就是网页内容
-                        // 可以在这里对网页内容进行解析、处理等操作
-                        println("Server Response: $responseBody")
-                        runOnUiThread {
-                            // 将JSON字符串解析为JsonObject
-                            val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
-                            // 读取特定键的值
-                            val result = jsonObject["result"].asString
-                            if(result=="success"){
-                                Toast.makeText(this@EditUserActivity,"更新用户信息成功", Toast.LENGTH_SHORT).show()
-                                ConnectionsManagementApplication.NowUser.userName=userName_ET.text.toString()
-                                ConnectionsManagementApplication.IsUserChanged =true
-                            }else{
-                                Toast.makeText(this@EditUserActivity,"更新用户信息失败", Toast.LENGTH_SHORT).show()
+                // 发送请求并处理响应
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                        // 处理服务器响应，根据需要更新UI或执行其他操作
+                        val responseBody =  response.body?.string()//JsonString
+                        if (responseBody != null) {
+                            // 处理服务器响应内容，这里的 responseBody 就是网页内容
+                            // 可以在这里对网页内容进行解析、处理等操作
+                            println("Server Response: $responseBody")
+                            runOnUiThread {
+                                // 将JSON字符串解析为JsonObject
+                                val jsonObject = Gson().fromJson(responseBody, JsonObject::class.java)
+                                // 读取特定键的值
+                                val result = jsonObject["result"].asString
+                                if(result=="success"){
+                                    Toast.makeText(this@EditUserActivity,"更新用户信息成功", Toast.LENGTH_SHORT).show()
+                                    ConnectionsManagementApplication.NowUser.userName=userName_ET.text.toString()
+                                    ConnectionsManagementApplication.IsUserChanged =true
+                                }else{
+                                    Toast.makeText(this@EditUserActivity,"更新用户信息失败", Toast.LENGTH_SHORT).show()
+                                }
+                                finish()
                             }
+                        }
+                    }
+                    override fun onFailure(call: okhttp3.Call, e: IOException) {
+                        runOnUiThread {
+                            // 处理请求失败情况，例如网络连接问题
+                            Toast.makeText(
+                                this@EditUserActivity,
+                                "网络连接失败",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             finish()
                         }
                     }
-                }
-                override fun onFailure(call: okhttp3.Call, e: IOException) {
-                    runOnUiThread {
-                        // 处理请求失败情况，例如网络连接问题
-                        Toast.makeText(
-                            this@EditUserActivity,
-                            "网络连接失败",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        finish()
-                    }
-                }
-            })
+                })
+            }else{
+                Toast.makeText(
+                    this@EditUserActivity,
+                    "请完善信息",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         }
 
     }

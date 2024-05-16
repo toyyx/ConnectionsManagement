@@ -1,6 +1,7 @@
 package com.example.connectionsmanagement.MysqlServer
 
 import android.widget.Switch
+import com.example.connectionsmanagement.Tools.Tools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -18,28 +19,30 @@ import java.sql.SQLException
 //与远程MySQL连接操作的类
  class MySQLConnection {
      companion object {
-         val urlBasic="http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/"
 
          // 定义挂起函数来获取网页内容
          suspend fun fetchWebpageContent(mode:String,param1:String,param2:String): String {
-             return try {
+             val failresult="{ \"result\": \"fail\"}"
+            return try {
                  // 尝试执行可能会抛出异常的代码
                  withContext(Dispatchers.IO) {
                      when(mode){
-                         "Login"->{URL(urlBasic+"LoginServlet?userName=${param1}&password=${param2}").readText()}
-                         "SearchRelations"->{URL(urlBasic+"SearchRelationsServlet?userId=${param1}").readText()}
-                         "DeleteRelation"->{URL(urlBasic+"DeleteRelationServlet?personId=${param1}").readText()}
-                         "SearchCommunications"->{URL(urlBasic+"SearchCommunicationsServlet?userId=${param1}").readText()}
-                         "DeleteCommunication"->{URL(urlBasic+"DeleteCommunicationServlet?eventId=${param1}").readText()}
+                         "Login"->{URL("${Tools.baseUrl}/LoginServlet?userName=${param1}&password=${param2}").readText()}
+                         "SearchRelations"->{URL("${Tools.baseUrl}/SearchRelationsServlet?userId=${param1}").readText()}
+                         "DeleteRelation"->{URL("${Tools.baseUrl}/DeleteRelationServlet?personId=${param1}").readText()}
+                         "SearchCommunications"->{URL("${Tools.baseUrl}/SearchCommunicationsServlet?userId=${param1}").readText()}
+                         "DeleteCommunication"->{URL("${Tools.baseUrl}/DeleteCommunicationServlet?eventId=${param1}").readText()}
                          else -> {""}
                      }
                  }
              } catch (e: UnknownHostException) {
                  // 捕获 UnknownHostException 异常，处理无网络连接的情况
-                 "无网络连接，请检查网络设置"
+                 //"无网络连接，请检查网络设置"
+                "{ \"result\": \"fail\" , \"error_msg\": \"无网络连接，请检查网络设置\"}"
              } catch (e: IOException) {
                  // 捕获 IOException 异常，处理其他网络错误的情况
-                 "网络错误：${e.message}"
+                //"网络错误：${e.message}"
+                "{ \"result\": \"fail\" , \"error_msg\": \"网络错误：${e.message}\"}"
              }
          }
      }

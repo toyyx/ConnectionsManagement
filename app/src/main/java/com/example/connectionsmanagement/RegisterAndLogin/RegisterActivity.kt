@@ -23,6 +23,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.FileProvider
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
+import com.example.connectionsmanagement.Tools.Tools
 import com.example.connectionsmanagement.Tools.Tools.getFileFromUri
 import com.example.connectionsmanagement.Tools.Tools.showUserAgreement
 import de.hdodenhof.circleimageview.CircleImageView
@@ -60,7 +61,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private var userAgreement_CB: CheckBox? = null
 
 
-    lateinit var imageUri: Uri  //图片地址
+    private var imageUri: Uri? =null //图片地址
     private lateinit var getPicturesFromCameraActivity: ActivityResultLauncher<Uri>//拍照获取图片-启动器
     private lateinit var getPicturesFromAlbumActivity: ActivityResultLauncher<String> //相册获取图片-启动器
 
@@ -176,7 +177,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             R.id.bt_registeractivity_register -> {
                 //获取用户输入的用户名、密码、验证码
                 val username = mEtRegisteractivityUsername?.text.toString().trim { it <= ' ' }
-                val password = mEtRegisteractivityPassword2?.text.toString().trim { it <= ' ' }
+                val password1 = mEtRegisteractivityPassword1?.text.toString().trim { it <= ' ' }
+                val password2 = mEtRegisteractivityPassword2?.text.toString().trim { it <= ' ' }
                 val phoneCode = mEtRegisteractivityPhonecodes?.text.toString().lowercase(Locale.getDefault())
                 val userRealName = mEtRegisteractivityUserRealName?.text.toString().trim { it <= ' ' }
                 val gender = selectedGender
@@ -185,10 +187,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
                 //注册验证
                 if (userAgreement_CB!!.isChecked) {
-                    if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(phoneCode)) {
+                    if (imageUri!=null && !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password1) && !TextUtils.isEmpty(password2) && (password1==password2) && !TextUtils.isEmpty(phoneCode)) {
                         if (phoneCode == realCode) {
                             //获取用户选择的图片文件
-                            val selectedImageFile = getFileFromUri(imageUri)
+                            val selectedImageFile = getFileFromUri(imageUri!!)
 
                             // 创建OkHttpClient实例
                             val client = OkHttpClient()
@@ -197,7 +199,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             val requestBody = MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("userName", username)
-                                .addFormDataPart("password", password)
+                                .addFormDataPart("password", password1)
                                 .addFormDataPart("name", userRealName)
                                 .addFormDataPart("gender", gender)
                                 .addFormDataPart("phone_number", phoneNumber)
@@ -210,7 +212,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
                             // 创建POST请求
                             val request = Request.Builder()
-                                .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/RegisterServlet")
+                                .url("${Tools.baseUrl}/RegisterServlet")
                                 .post(requestBody)
                                 .build()
 

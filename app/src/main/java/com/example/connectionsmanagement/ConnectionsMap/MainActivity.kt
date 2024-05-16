@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -100,6 +101,34 @@ class MainActivity : AppCompatActivity() {
                 else -> false // 返回false表示事件未被处理
             }
         }
+
+        //主页面遮挡视图，防止点击事件触发主页面
+        val shelter_v=findViewById<View>(R.id.shelter_V)
+        shelter_v.setOnTouchListener { _, _ -> true } // 禁用阻挡视图上的点击事件
+
+        drawlayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                // 抽屉正在滑动时调用
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                // 抽屉完全展开时调用
+//                Toast.makeText(ConnectionsManagementApplication.context, "open", Toast.LENGTH_SHORT).show()//调试使用
+                shelter_v.visibility=View.VISIBLE
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                // 抽屉完全关闭时调用
+//                Toast.makeText(ConnectionsManagementApplication.context, "close", Toast.LENGTH_SHORT).show()//调试使用
+                shelter_v.visibility=View.GONE
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+                // 抽屉状态改变时调用
+            }
+        })
+
 
         //右侧抽屉
         findViewById<CircleImageView>(R.id.toRightGrawer_userimage).setOnClickListener{
@@ -277,7 +306,7 @@ class MainActivity : AppCompatActivity() {
     //软件使用说明弹窗
     fun showUseTips(){
         val instructions = """
-                    欢迎使用《人脉管理小助手》！
+                    欢迎使用《脉络森林》！
                     
                     本应用旨在帮助您高效管理人脉，轻松记录交际日程，并提供便捷的人脸识别功能。
             
@@ -296,13 +325,13 @@ class MainActivity : AppCompatActivity() {
                     - 人脸搜索（1：N）：在当前人脉库中进行单张人脸的搜索，以快速查找匹配的人脉信息。
                     - 人脸搜索（M：N）：支持在当前人脉库中进行多张人脸的搜索，以寻找可能的匹配结果。
             
-                    我们希望《人脉管理小助手》能够为您的人脉管理提供便利，并提升您的交际效率。如果您在使用过程中有任何问题或建议，欢迎随时联系我们21013132@mail.ecust.edu.cn
+                    我们希望《脉络森林》能够为您的人脉管理提供便利，并提升您的交际效率。如果您在使用过程中有任何问题或建议，欢迎随时联系我们21013132@mail.ecust.edu.cn
             
                     祝您使用愉快！
         """.trimIndent()
         // 创建一个对话框，并将滚动视图设置为其内容
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("《人脉管理小助手》使用说明")
+        builder.setTitle("《脉络森林》使用说明")
         builder.setMessage(instructions)
         builder.setPositiveButton("确定") { dialog, which ->
             dialog.dismiss()

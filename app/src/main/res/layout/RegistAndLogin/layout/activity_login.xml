@@ -69,9 +69,9 @@
             <EditText
                 android:id="@+id/et_loginactivity_username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:height="50dp"
+                android:layout_height="45dp"
                 android:hint="用户名"
+                android:inputType="text"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/rectangle" />
@@ -84,10 +84,10 @@
             <EditText
                 android:id="@+id/et_loginactivity_password"
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
-                android:height="50dp"
+                android:layout_height="45dp"
                 android:background="@drawable/rectangle"
                 android:gravity="center"
+                android:maxLines="1"
                 android:hint="登录密码"
                 android:inputType="textPassword"
                 android:textStyle="bold" />
@@ -105,18 +105,21 @@
         <CheckBox
             android:id="@+id/login_checkBoxOfuserAgreement"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"/>
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:gravity="center"/>
         <TextView
-            android:text="已阅读并同意"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:text="已阅读并同意"
+            android:gravity="center"/>
         <TextView
             android:id="@+id/login_userAgreement_TextView"
             android:text="《用户协议》"
             android:textColor="#0AC4E3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:gravity="center"/>
     </LinearLayout>
     <Button
         android:id="@+id/bt_loginactivity_login"

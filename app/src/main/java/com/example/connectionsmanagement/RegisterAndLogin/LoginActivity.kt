@@ -75,8 +75,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             R.id.tv_loginactivity_forget ->{
                 // 创建一个对话框，并将滚动视图设置为其内容
                 val builder = AlertDialog.Builder(this)
+                val dialogLayout = layoutInflater.inflate(R.layout.dialog_forgetpassword, null)
                 builder.setTitle("忘记密码")
-                builder.setMessage("请联系管理员21013132@mail.ecust.edu.cn")
+                builder.setView(dialogLayout)
                 builder.setPositiveButton("确定") { dialog, which ->
                     dialog.dismiss()
                 }

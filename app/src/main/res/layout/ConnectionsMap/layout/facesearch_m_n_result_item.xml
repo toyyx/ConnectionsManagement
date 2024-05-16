@@ -20,17 +20,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="（括号中为置信度0~1，数字越大置信度越高）">
-                </TextView>
-            </LinearLayout>
+                android:text="（括号中为置信度，范围0~1）"
+                android:textSize="10sp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,6 +119,12 @@
             android:text="搜索结果"
             android:gravity="center"
             android:textSize="18sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="(参考建议:推荐以80为参考线，大于则视为相同人脸)"
+            android:textSize="10sp"
+            android:gravity="center"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

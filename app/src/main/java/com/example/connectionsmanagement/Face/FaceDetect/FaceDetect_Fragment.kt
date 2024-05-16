@@ -70,7 +70,7 @@ class FaceDetect_Fragment : Fragment() {
 
                 // 创建POST请求
                 val request = Request.Builder()
-                    .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/FaceDetectServlet")
+                    .url("${Tools.baseUrl}/FaceDetectServlet")
                     .post(requestBody)
                     .build()
 

@@ -8,12 +8,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <View
+            android:id="@+id/shelter_V"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:visibility="gone"
+            android:elevation="10dp"/>
         <LinearLayout
             android:id="@+id/main_title"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
-
+            android:layout_height="80dp"
+            android:elevation="1dp">
             <ImageButton
                 android:id="@+id/toLeftGrawer_imageButton"
                 android:layout_width="30dp"
@@ -87,7 +93,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/main_title"
-            android:layout_above="@+id/bottomNavigationView">
+            android:layout_above="@+id/bottomNavigationView"
+            android:elevation="1dp">
 
         </androidx.fragment.app.FragmentContainerView>
 
@@ -99,7 +106,8 @@
             android:layout_marginBottom="0dp"
             android:background="@drawable/bottom_navigation_background"
             app:labelVisibilityMode="unlabeled"
-            app:menu="@menu/bottom_navigation_menu" />
+            app:menu="@menu/bottom_navigation_menu"
+            android:elevation="1dp"/>
     </RelativeLayout>
 
     <!-- 左侧侧滑菜单 -->
@@ -213,7 +221,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="版本号 1.0.0"
+            android:text="版本号 1.0"
             android:gravity="center"
             android:layout_margin="10dp"/>
         <TextView
@@ -241,22 +249,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="15dp"
-                android:background="@color/grey"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/exit_left_green"
-                android:scaleType="fitXY"/>
+<!--            <ImageButton-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_margin="15dp"-->
+<!--                android:background="@color/grey"-->
+<!--                android:layout_gravity="center_vertical"-->
+<!--                android:src="@drawable/exit_left_green"-->
+<!--                android:scaleType="fitXY"/>-->
             <!-- 占位的空间，使得右侧控件位于最右边 -->
+            <View
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp" />
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="个人资料"
+                android:textSize="20sp"
                 android:gravity="center"/>
-
             <ImageButton
                 android:id="@+id/editUser_ImageButton"
                 android:layout_width="30dp"

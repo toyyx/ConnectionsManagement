@@ -13,6 +13,7 @@ import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
 import com.example.connectionsmanagement.Relations.SearchParticipants.SearchParticipantsActivity
 import com.example.connectionsmanagement.Relations.SearchParticipants.SelectedParticipant
 import com.example.connectionsmanagement.R
+import com.example.connectionsmanagement.Tools.Tools
 import com.google.gson.Gson
 import okhttp3.Callback
 import okhttp3.MultipartBody
@@ -78,7 +79,7 @@ class AddCommunicationActivity : AppCompatActivity() {
 
                         // 创建POST请求
                         val request = Request.Builder()
-                            .url("http://121.199.71.143:8080/connection_server-1.0-SNAPSHOT/AddCommunicationServlet")
+                            .url("${Tools.baseUrl}/AddCommunicationServlet")
                             .post(requestBody)
                             .build()
 
