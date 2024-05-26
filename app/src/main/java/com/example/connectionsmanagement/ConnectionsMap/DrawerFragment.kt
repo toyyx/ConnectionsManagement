@@ -27,16 +27,15 @@ import com.example.connectionsmanagement.MysqlServer.MySQLConnection
 import com.example.connectionsmanagement.R
 import com.example.connectionsmanagement.Relations.EditRelationActivity
 import com.example.connectionsmanagement.Tools.ConnectionsManagementApplication
+import com.example.connectionsmanagement.Tools.MySuperTextView
 import com.example.connectionsmanagement.Tools.Tools
 import com.example.connectionsmanagement.Tools.Tools.getBitmapFromLocalPath
-import com.example.connectionsmanagement.Tools.MySuperTextView
 import com.google.gson.Gson
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
@@ -263,10 +262,13 @@ class DrawerFragment : Fragment() {
         try {
             refresh()
         } catch (e: UninitializedPropertyAccessException) {
-            runBlocking {
-                Tools.RefreshRelations()
+            GlobalScope.launch {
+                val job=async{Tools.RefreshRelations()}
+                job.await()
+                withContext(Dispatchers.Main) {
+                    refresh()
+                }
             }
-            refresh()
         }
 
         return thisView
